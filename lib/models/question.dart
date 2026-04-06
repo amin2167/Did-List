@@ -4,6 +4,7 @@ enum AnswerType { multipleChoice, subjective }
 
 class Question {
   final List<String> weekDayLabels = ['월', '화', '수', '목', '금', '토', '일'];
+  int id;
   String target;
   AnswerType answerType;
   List<String>? answers; //주관식 답변
@@ -14,6 +15,7 @@ class Question {
   //final String? subjectiveAnswer;
 
   Question({
+    required this.id,
     required this.target,
     required this.answerType,
     this.answers,

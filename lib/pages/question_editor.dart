@@ -20,6 +20,7 @@ class AddQuestionPage extends StatefulWidget {
 }
 
 class _AddQuestionPageState extends State<AddQuestionPage> {
+
   TextEditingController targetController = TextEditingController();
   List<TextEditingController> optionControllers = List.generate(
     2,
@@ -108,6 +109,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     }
     // 저장
     Question q = Question(
+      id: providerList.savedQuestions.length,
       target: targetController.text,
       answerType: providerEdit.answerType,
       answers: optionControllers.map((c) => c.text).toList(),

@@ -75,7 +75,7 @@ class _RecordPageState extends State<RecordPage> {
                   ),
               ],
               onSelected: (String? value) {
-                selectedQuestion = entry.value; //이거 선택된걸 어떻게 가져오지..
+                //selectedQuestion = entry.value; //이거 선택된걸 어떻게 가져오지..
                 print("선택된 값: $value");
               },
             ),
@@ -154,7 +154,7 @@ class _RecordPageState extends State<RecordPage> {
                             ),
                             child: Column(
                               children: [
-                                Text('${entry.value.}'),
+                                // Text('${entry.value.}'),
                                 Text('2회')
                               ],
                             ),
