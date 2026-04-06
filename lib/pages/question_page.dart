@@ -220,7 +220,7 @@ class QuestionPage extends StatelessWidget {
                                                 ),
 
                                                 child: GradientCircle(
-                                                  text: weekDayLabels[i.weekday -1],
+                                                  text: weekDayLabels[i.weekday],
                                                   size: 20,
                                                   fontSize: 12,
                                                 ),

@@ -214,7 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     Icon(Icons.task_alt),
                                   ],
                                 ),
-                                SizedBox(height: 6),
+                                // SizedBox(height: 4),
                                 entry.value.answerType ==
                                         AnswerType.multipleChoice
                                     ? Column(
@@ -275,7 +275,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       )
                                     : TextField(),
 
-                                SizedBox(height: 12),
+                                SizedBox(height: 14),
                                 Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),

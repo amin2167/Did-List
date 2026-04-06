@@ -8,6 +8,7 @@ import '../models/question.dart';
 import '../providers/question_edit_provider.dart';
 import '../providers/question_list_provider.dart';
 import '../widgets/shadow_text_field.dart';
+import '../widgets/answer_text_field.dart';
 
 class AddQuestionPage extends StatefulWidget {
   const AddQuestionPage({super.key, this.nowQuestion});
@@ -46,6 +47,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     final q = widget.nowQuestion;
     if (q != null) {
       selectedDayIdx = Set.from(q.datesIdx);
+      selectedDays = q.dates;
       isAllweek = q.isAllweek;
     }
 
@@ -135,6 +137,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
       answerType: providerEdit.answerType,
       options: optionControllers.map((v) => v.text).toList(),
       dates: selectedDays,
+      datesIdx: selectedDayIdx,
       isAllweek: isAllweek,
     );
 
@@ -155,9 +158,6 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
   }
 
   DateTime changeDate(int diff) {
-    //이번주월요일을 구하고
-    // diff-1만큼 더해
-    //이번주 월요일 날짜 < 어캐구함?
     final now = DateTime.now();
     DateTime monday = now.subtract(Duration(days: now.weekday - 1));
     DateTime resultWeekDay = monday.add(Duration(days: diff - 1));
@@ -189,10 +189,9 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                             setState(() {
                               if (isSelected) {
                                 selectedDayIdx.remove(index);
-                                selectedDays.remove(changeDate(index+1));
                               } else {
                                 selectedDayIdx.add(index);
-                                selectedDays.add(changeDate(index+1));
+                                //selectedDays.add(changeDate(index+1));
                               }
                             });
                           },
@@ -350,14 +349,21 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
               BuildActionButton(
                 label: '저장',
                 onTap: () {
-                  for (var i in selectedDays) {
-                    selectedDays.add(i);
-                  }
                   if (widget.nowQuestion == null) {
+                    for (var i in selectedDayIdx) {
+                      selectedDays.add(changeDate(i));
+                    }
                     //+버튼이면
                     validation();
                   } else {
+                    print('check');
                     //질문tile이면
+                    selectedDays = {};
+                    //selectedDayIdx가 추가되면
+                    for (var i in selectedDayIdx) {
+                      print(i);
+                      selectedDays.add(changeDate(i));
+                    }
                     modify();
                   }
                 },
@@ -467,48 +473,6 @@ class BuildTypeButton extends StatelessWidget {
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                   color: isSelected ? Colors.black87 : Colors.grey[600],
                 ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// AnswerTextField는 그대로
-class AnswerTextField extends StatelessWidget {
-  const AnswerTextField({
-    super.key,
-    required this.label,
-    required this.controller,
-  });
-
-  final String label;
-  final TextEditingController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.5,
-        child: ShadowTextField(
-          textField: TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              labelText: label,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey, width: 1),
-              ),
-              focusedBorder: OutlineInputBorder(
-                // ← 이거 추가
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.blue, width: 2),
               ),
             ),
           ),
