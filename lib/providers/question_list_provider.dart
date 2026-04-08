@@ -40,4 +40,15 @@ class QuestionListProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void saveCounts(Question q) {
+    if(q.selectedOptions != null) {
+      
+      for(var k in q.selectedOptions!) {
+        q.answersCounts![k]++;
+      }
+    }
+
+    notifyListeners();
+  }
 }

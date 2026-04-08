@@ -16,8 +16,7 @@ class RecordPage extends StatefulWidget {
 
 class _RecordPageState extends State<RecordPage> {
   late DateTime now;
-  
-
+  Question? selectedQuestion;
 
   @override
   void initState() {
@@ -29,7 +28,7 @@ class _RecordPageState extends State<RecordPage> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<QuestionListProvider>();
-    Question selectedQuestion;
+
     // TODO: implement build
     return BasePage(
       title: '기록',
@@ -37,15 +36,16 @@ class _RecordPageState extends State<RecordPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            DropdownMenu<String>( //이걸 가로를 화면 넓이까지 하고싶은데 width안넣고
+            DropdownMenu<int>(
+              //이걸 가로를 화면 넓이까지 하고싶은데 width안넣고
               // 1. 이미지처럼 너비를 꽉 채우려면 지정 (부모 크기에 맞춤)
               requestFocusOnTap: false,
               width: double.infinity,
-              
+
               // 2. 초기 힌트 텍스트 및 스타일
               label: const Text("목표선택"),
               hintText: "목표를 선택해주세요",
-              
+
               // 3. 테두리 및 디자인 (이미지의 파란색 테두리 느낌)
               inputDecorationTheme: InputDecorationTheme(
                 filled: true,
@@ -59,24 +59,27 @@ class _RecordPageState extends State<RecordPage> {
                   ),
                 ),
               ),
-              
+
               // 4. 화살표 아이콘 변경
               trailingIcon: const Icon(Icons.keyboard_arrow_down),
               //이거 왜 for에 빨간줄? 나는 DropdownMenuEntry위젯을 for 돌리고싶은걷임
-             
-          
+
               // 5. 메뉴 구성 요소
               dropdownMenuEntries: [
-                 for(var entry in provider.savedQuestions.asMap().entries)
+                for (var entry in provider.savedQuestions.asMap().entries)
                   DropdownMenuEntry(
-                    value: (entry.key+1).toString(),
+                    value: (entry.key),
                     label: entry.value.target,
                     leadingIcon: Icon(Icons.history),
                   ),
               ],
-              onSelected: (String? value) {
-                //selectedQuestion = entry.value; //이거 선택된걸 어떻게 가져오지..
-                print("선택된 값: $value");
+              onSelected: (int? value) {
+                setState(() {
+                  if (value != null) {
+                    selectedQuestion =
+                        provider.savedQuestions[value]; //이거 선택된걸 어떻게 가져오지..
+                  }
+                });
               },
             ),
             SizedBox(height: 6),
@@ -112,14 +115,12 @@ class _RecordPageState extends State<RecordPage> {
                           ),
                         ],
                       ),
-              
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
                             child: Container(
                               decoration: BoxDecoration(
                                 border: Border.all(width: 1),
@@ -135,51 +136,28 @@ class _RecordPageState extends State<RecordPage> {
                 ),
               ),
             ),
-            SizedBox(height: 6,),
+            SizedBox(height: 6),
             Expanded(
-              child: ListView(
+              child: GridView.count(
+                crossAxisCount: 2,
                 children: [
-                  for(var entry in provider.savedQuestions.asMap().entries)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            
-                            alignment: Alignment.topCenter,
-                            height: 50,
-                            // width:  MediaQuery.of(context).size.height * 0.5,
-                            decoration: BoxDecoration(
-                              border: Border.all(),
-                            ),
-                            child: Column(
-                              children: [
-                                // Text('${entry.value.}'),
-                                Text('2회')
-                              ],
-                            ),
-                          ),
+                  if (selectedQuestion != null &&
+                      selectedQuestion!.answers != null)
+                    for (var entry in selectedQuestion!.answers!)
+                      Container(
+                        alignment: Alignment.topCenter,
+                        height: 50,
+                        decoration: BoxDecoration(border: Border.all()),
+                        child: Column(
+                          children: [
+                            Text(entry),
+                            Text('회'),
+                          ],
                         ),
-                        Expanded(
-                          child: Container(
-                            alignment: Alignment.topCenter,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              border: Border.all(),
-                            ),
-                            child: Column(
-                              children: [
-                                Text('test2'),
-                                Text('회')
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
+                      ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

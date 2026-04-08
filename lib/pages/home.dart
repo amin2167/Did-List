@@ -48,9 +48,9 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void save(Question q, Set<int> idxAnswers) {
+  void saveHome(Question q) {
     QuestionListProvider provider = QuestionListProvider();
-    provider.saveAnswer(q, idxAnswers);
+    provider.saveCounts(q);
   }
 
   void _showCalendarDialog(BuildContext context) {
@@ -293,7 +293,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ),
 
                                     onPressed: () {
-                                      // save(provider.);
+                                      // saveHome(entry.value)
                                     },
                                     child: Row(
                                       mainAxisAlignment:
@@ -389,34 +389,4 @@ class TimerTile extends StatelessWidget {
   }
 }
 
-//한눈에 보기 편해야함
-//객관식 답변이 숫자면 숫자
 
-class SavedInfo {
-  DateTime date = DateTime.now(); //날짜
-  String? target = ''; //목표
-  AnswerType answerType = AnswerType.multipleChoice; //답변 타입
-  //객관식 답변 //인덱스만 찾아가면 됨 몇번을 선택햇는지만 알면 대니까
-
-  List<String>? savedAnswers = [];
-
-  SavedInfo({
-    required this.date,
-    this.target,
-    required this.answerType,
-    this.savedAnswers,
-  });
-}
-
-//이거 정보를 다른 탭에서도 써야함 (기록)
-class SaveProvider extends ChangeNotifier {
-  Map<String, List<String>> savedList = {};
-
-  void addSavedInfo(SavedInfo info) {
-    if (info.target != '') {
-      savedList[info.target!] = info.savedAnswers!;
-    }
-
-    notifyListeners();
-  }
-}
