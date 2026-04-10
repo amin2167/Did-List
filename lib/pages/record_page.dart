@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_main/core/layout/base_page.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'dart:math';
+
 
 import '../models/question.dart';
 import '../widgets/date_selector.dart';
@@ -29,7 +31,14 @@ class _RecordPageState extends State<RecordPage> {
   Widget build(BuildContext context) {
     final provider = context.watch<QuestionListProvider>();
 
-    // TODO: implement build
+    List<Color> ColorArr = [
+      Color(0xFFFF8383),
+      Color(0xFFFFC193),
+      Color(0xFFFFEDCE),
+      Color(0xFFCFECF3),
+      Color(0xFFDAF9DE),
+    ];
+
     return BasePage(
       title: '기록',
       child: Padding(
@@ -62,7 +71,6 @@ class _RecordPageState extends State<RecordPage> {
 
               // 4. 화살표 아이콘 변경
               trailingIcon: const Icon(Icons.keyboard_arrow_down),
-              //이거 왜 for에 빨간줄? 나는 DropdownMenuEntry위젯을 for 돌리고싶은걷임
 
               // 5. 메뉴 구성 요소
               dropdownMenuEntries: [
@@ -76,8 +84,17 @@ class _RecordPageState extends State<RecordPage> {
               onSelected: (int? value) {
                 setState(() {
                   if (value != null) {
-                    selectedQuestion =
-                        provider.savedQuestions[value]; //이거 선택된걸 어떻게 가져오지..
+                    selectedQuestion = provider.savedQuestions[value];
+                    print("여기");
+                    //answersCount가 완전 처음엔 null일수가 있어서 넣은거임
+                    if (selectedQuestion!.answersCounts == null) {
+                      selectedQuestion!.answersCounts = List.filled(
+                        selectedQuestion!.answers!.length,
+                        0,
+                      );
+                    }
+
+                    print(selectedQuestion!.answers);
                   }
                 });
               },
@@ -85,40 +102,51 @@ class _RecordPageState extends State<RecordPage> {
             SizedBox(height: 6),
             Padding(
               padding: const EdgeInsets.all(0.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(width: 2, color: Color(0xFF5B8DEF)),
-                  borderRadius: BorderRadius.circular(16),
+              child: InputDecorator(
+                decoration: InputDecoration(
+                  labelText: "기간 선택", // 테두리 사이에 들어가는 라벨
+                  filled: true,
+                  fillColor: Colors.grey.shade50,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: const BorderSide(
+                      color: Color(0xFF5B8DEF),
+                      width: 2,
+                    ),
+                  ),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment:
+                            MainAxisAlignment.start, //<<이거 왜 안먹지 start?
                         children: [
                           Icon(Icons.calendar_today),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(width: 1),
-                                  ),
-                                  child: DateSelector(now: now),
-                                ),
+                          SizedBox(width: 8),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(width: 1),
                               ),
-                              Text('부터'),
-                            ],
+                              child: DateSelector(now: now),
+                            ),
                           ),
+                          Text('부터'),
                         ],
                       ),
 
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          Icon(Icons.calendar_today),
+                          SizedBox(width: 8),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                             child: Container(
@@ -137,24 +165,52 @@ class _RecordPageState extends State<RecordPage> {
               ),
             ),
             SizedBox(height: 6),
+
             Expanded(
               child: GridView.count(
-                crossAxisCount: 2,
+                mainAxisSpacing: 6, // 세로 아이템 간 간격 제거
+                crossAxisSpacing: 6, // 가로 아이템 간 간격 제거
+                crossAxisCount: 3,
+
+                padding: EdgeInsets.zero,
                 children: [
                   if (selectedQuestion != null &&
                       selectedQuestion!.answers != null)
-                    for (var entry in selectedQuestion!.answers!)
+                    for (var entry
+                        in selectedQuestion!.answers!.asMap().entries)
                       Container(
                         alignment: Alignment.topCenter,
-                        height: 50,
-                        decoration: BoxDecoration(border: Border.all()),
+                        height: 20,
+                        decoration: BoxDecoration(
+                          color: ColorArr[entry.key % selectedQuestion!.answers!.length], 
+                          border: Border.all(
+                            color: Color(0xFF5B8DEF),
+                            width: 2,
+                          ),
+                        ),
                         child: Column(
                           children: [
-                            Text(entry),
-                            Text('회'),
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(entry.value),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                alignment:
+                                    Alignment.center, // 3. 0회 글자: 남은 공간의 정중앙
+                                child: Text(
+                                  "${selectedQuestion!.answersCounts![entry.key]} 회",
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
+                  SizedBox(width: 8),
                 ],
               ),
             ),

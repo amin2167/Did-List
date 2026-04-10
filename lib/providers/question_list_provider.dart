@@ -43,12 +43,12 @@ class QuestionListProvider extends ChangeNotifier {
 
   void saveCounts(Question q) {
     if(q.selectedOptions != null) {
-      
       for(var k in q.selectedOptions!) {
+        q.answersCounts ??= q.answersCounts = List.filled(q.answers!.length, 0);
+      
         q.answersCounts![k]++;
       }
     }
-
     notifyListeners();
   }
 }

@@ -41,16 +41,10 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     if (picked != null) {
-      print("선택된 날짜: $picked");
       setState(() {
         now = picked;
       });
     }
-  }
-
-  void saveHome(Question q) {
-    QuestionListProvider provider = QuestionListProvider();
-    provider.saveCounts(q);
   }
 
   void _showCalendarDialog(BuildContext context) {
@@ -293,7 +287,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ),
 
                                     onPressed: () {
-                                      // saveHome(entry.value)
+                                      provider.saveCounts(entry.value);
                                     },
                                     child: Row(
                                       mainAxisAlignment:
