@@ -15,7 +15,7 @@ class QuestionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<QuestionListProvider>();
-      final List<String> weekDayLabels = ['월', '화', '수', '목', '금', '토', '일'];
+    final List<String> weekDayLabels = ['월', '화', '수', '목', '금', '토', '일'];
     //페이지 메인
     return BasePage(
       title: '설정',
@@ -28,10 +28,7 @@ class QuestionPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const SizedBox(width: 40), // 좌측 균형용
-              PlusAiconButton(
-                page: AddQuestionPage(),
-                label: '새 목표',
-              ),
+              PlusAiconButton(page: AddQuestionPage(), label: '새 목표'),
             ],
           ),
 
@@ -51,6 +48,10 @@ class QuestionPage extends StatelessWidget {
                           in provider.savedQuestions.asMap().entries)
                         InkWell(
                           onTap: () {
+                            print(
+                              "test",
+                            ); //이게 왜 안나옴? addquestionpage로 이동은 잘대는대?
+                            print(provider.savedQuestions[0].answers);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -60,6 +61,8 @@ class QuestionPage extends StatelessWidget {
                             );
                           },
                           child: Card(
+                            // 중요: 자식 위젯(InkWell)의 효과가 카드 모서리에 맞춰 잘리도록 설정
+                            clipBehavior: Clip.antiAlias,
                             elevation: 1,
                             margin: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(
@@ -102,7 +105,7 @@ class QuestionPage extends StatelessWidget {
                                               constraints:
                                                   const BoxConstraints(),
                                               icon: const Icon(
-                                                Icons.delete,
+                                                Icons.delete_forever_sharp,
                                                 color: Colors.red,
                                               ),
                                               onPressed: () {
@@ -213,14 +216,15 @@ class QuestionPage extends StatelessWidget {
                                                 label_2: '주관식',
                                               ),
                                             ),
-                                            for (var i in entry.value.dates) 
+                                            for (var i in entry.value.dates)
                                               Padding(
                                                 padding: const EdgeInsets.only(
                                                   right: 4,
                                                 ),
 
                                                 child: GradientCircle(
-                                                  text: weekDayLabels[i.weekday],
+                                                  text:
+                                                      weekDayLabels[i.weekday],
                                                   size: 20,
                                                   fontSize: 12,
                                                 ),
@@ -275,8 +279,7 @@ class QuestionPage extends StatelessWidget {
                               ),
                             ),
                           ),
-                        ),
-
+                        ), //여기임
                       // 오른쪽 아이콘
                     ],
                   ),

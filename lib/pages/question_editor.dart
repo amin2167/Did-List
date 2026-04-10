@@ -66,7 +66,6 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
             .toList();
       }
     }
-
     //now (오늘날짜) 설정
   }
 
@@ -79,7 +78,6 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     }
     super.dispose();
   }
-
   void validation() {
     final providerEdit = context.read<QuestionEditProvider>();
     final providerList = context.read<QuestionListProvider>();
@@ -114,6 +112,8 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
       answerType: providerEdit.answerType,
       answers: optionControllers.map((c) => c.text).toList(),
       dates: selectedDays,
+      isIndicate: true,
+      completedDates: [],
       datesIdx: selectedDayIdx,
       isAllweek: isAllweek,
     );
@@ -159,10 +159,11 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     });
   }
 
+  //현제 날짜 리턴하는 함수
   DateTime changeDate(int diff) {
     final now = DateTime.now();
     DateTime monday = now.subtract(Duration(days: now.weekday - 1));
-    DateTime resultWeekDay = monday.add(Duration(days: diff - 1));
+    DateTime resultWeekDay = monday.add(Duration(days: diff));
     return resultWeekDay;
   }
 
@@ -193,7 +194,6 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                                 selectedDayIdx.remove(index);
                               } else {
                                 selectedDayIdx.add(index);
-                                //selectedDays.add(changeDate(index+1));
                               }
                             });
                           },

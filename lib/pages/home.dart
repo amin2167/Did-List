@@ -11,7 +11,7 @@ import '../core/layout/base_page.dart';
 import '../models/question.dart';
 import '../providers/question_list_provider.dart';
 import '../widgets/plusAiconButton.dart';
-
+import '../widgets/calendar_dialog.dart';
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
@@ -31,6 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     now = DateTime.now();
   }
+
   //이게 달력모양 데이트 픽
   Future<void> pickDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -46,51 +47,16 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }
   }
+    //완료버튼 눌럿을때 or drops 보여줄때 날짜 비교해서 보여줄지 말지 하게하는 함수
+  bool isSameDay(Set<DateTime> dates, DateTime now) {
 
-  void _showCalendarDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: SizedBox(
-          height: 450,
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: TableCalendar(
-              locale: 'ko_KR', // 한국어
-              firstDay: DateTime(2000),
-              lastDay: DateTime(2100),
-              focusedDay: now,
-              selectedDayPredicate: (day) => isSameDay(day, now),
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() => now = selectedDay);
-                Navigator.pop(context);
-              },
-              onPageChanged: (focusedDay) {
-
-              },
-              calendarStyle: CalendarStyle(
-                selectedDecoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF5B8DEF), Color(0xFF8E5CF6)],
-                  ),
-                  shape: BoxShape.circle,
-                ),
-                todayDecoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  shape: BoxShape.circle,
-                ),
-              ),
-
-              headerStyle: HeaderStyle(
-                formatButtonVisible: false, // 상단 Week/Month 버튼 숨김
-                titleCentered: true,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+    for(var date in dates) {
+      print("저장된날짜:${date}");
+      if(date.year == now.year && date.month == now.month && date.day == now.day) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @override
@@ -102,7 +68,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-
     final provider = context.watch<QuestionListProvider>();
 
     return BasePage(
@@ -122,14 +87,32 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             headerBuilder: (context, data) {
               return GestureDetector(
-                onTap: () => _showCalendarDialog(context),
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  // 네모난 큰 달력 나오게 하는거
+                  CalendarDialog.show(
+                    context,
+                    selectedDay: now, // 현재 home.dart가 가지고 있는 선택된 날짜
+                    onDaySelected: (pickedDate) {
+                      // 다이얼로그에서 날짜를 찍었을 때 실행될 로직
+                      setState(() {
+                        now = pickedDate;
+                      });
+                      _controller.animateToDate(pickedDate);
+                    },
+                  );
+                },
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.all(0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      //아래 화살표 잇는 날짜 바꾸려고 하는 버튼
                       DateSelector(now: now),
-                      PlusAiconButton(page: AddQuestionPage(), label: '새 목표'),
+                      PlusAiconButton(
+                        page: const AddQuestionPage(),
+                        label: '새 목표',
+                      ),
                     ],
                   ),
                 ),
@@ -164,152 +147,169 @@ class _MyHomePageState extends State<MyHomePage> {
                   )
                 : ListView(
                     children: [
+                      
                       for (var entry in provider.savedQuestions.asMap().entries)
-                        Card(
-                          clipBehavior: Clip.antiAlias,
-                          elevation: 1,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              color: Colors.grey.shade300, // 테두리 색
-                              width: 1,
+                        if(isSameDay(entry.value.dates, now)) //이거로 보여줄지 안보여줄지 하는건디 왜 작동안하지?
+                          Card(
+                            clipBehavior: Clip.antiAlias,
+                            elevation: 1,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                color: Colors.grey.shade300, // 테두리 색
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            Color(0xFF5B8DEF), // 파랑
-                                            Color(0xFF8E5CF6), // 보라
-                                          ],
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 30,
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Color(0xFF5B8DEF), // 파랑
+                                              Color(0xFF8E5CF6), // 보라
+                                            ],
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            '${entry.key + 1}',
+                                            style: TextStyle(color: Colors.white),
+                                          ),
                                         ),
                                       ),
-                                      child: Center(
-                                        child: Text(
-                                          '${entry.key + 1}',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text('${entry.value.target}'),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text('${entry.value.target}'),
-                                    ),
-                                    Icon(Icons.task_alt),
-                                  ],
-                                ),
-                                // SizedBox(height: 4),
-                                entry.value.answerType ==
-                                        AnswerType.multipleChoice
-                                    ? Column(
-                                        children: [
-                                          for (var option
-                                              in entry.value.answers!
-                                                  .asMap()
-                                                  .entries)
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    vertical: 4,
-                                                  ),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  border: Border.all(
-                                                    // 선택된 Set에 인덱스가 포함되어 있으면 파란색 테두리
-                                                    color:
-                                                        entry.value.selectedOptions!
-                                                            .contains(
-                                                              option.key,
+                                      Icon(Icons.task_alt),
+                                    ],
+                                  ),
+                                  // SizedBox(height: 4),
+                                  entry.value.answerType ==
+                                          AnswerType.multipleChoice
+                                      ? Column(
+                                          children: [
+                                            for (var option
+                                                in entry.value.answers!
+                                                    .asMap()
+                                                    .entries)
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 4,
+                                                    ),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(12),
+                                                    border: Border.all(
+                                                      // 선택된 Set에 인덱스가 포함되어 있으면 파란색 테두리
+                                                      color:
+                                                          entry
+                                                              .value
+                                                              .selectedOptions!
+                                                              .contains(
+                                                                option.key,
+                                                              )
+                                                          ? const Color.fromARGB(
+                                                              255,
+                                                              2,
+                                                              134,
+                                                              241,
                                                             )
-                                                        ? const Color.fromARGB(255, 2, 134, 241)
-                                                        : Colors.grey.shade300,
-                                                    width: 2,
+                                                          : Colors.grey.shade300,
+                                                      width: 2,
+                                                    ),
                                                   ),
-                                                ),
-                                                child: CheckboxListTile(
-                                                  title: Text(option.value),
-                                                  value: entry.value.selectedOptions!
-                                                      .contains(option.key),
-                                                  onChanged: (bool? checked) {
-                                                    setState(() {
-                                                      if (checked == true) {
-                                                        entry.value.selectedOptions!.add(
-                                                          option.key,
-                                                        );
-                                                      } else {
-                                                        entry.value.selectedOptions!.remove(
-                                                          option.key,
-                                                        );
-                                                      }
-                                                    });
-                                                  },
-                                                  controlAffinity:
-                                                      ListTileControlAffinity
-                                                          .leading, // 체크박스 위치
-                                                  activeColor:
-                                                      //gradient로 하고싶음      Color(0xFF5B8DEF), // 파랑
-                                                      //Color(0xFF8E5CF6), // 보라 이거로
-                                                      const Color.fromARGB(255, 83, 151, 210), // 체크됐을 때 색상
+                                                  child: CheckboxListTile(
+                                                    title: Text(option.value),
+                                                    value: entry
+                                                        .value
+                                                        .selectedOptions!
+                                                        .contains(option.key),
+                                                    onChanged: (bool? checked) {
+                                                      setState(() {
+                                                        if (checked == true) {
+                                                          entry
+                                                              .value
+                                                              .selectedOptions!
+                                                              .add(option.key);
+                                                        } else {
+                                                          entry
+                                                              .value
+                                                              .selectedOptions!
+                                                              .remove(option.key);
+                                                        }
+                                                      });
+                                                    },
+                                                    controlAffinity:
+                                                        ListTileControlAffinity
+                                                            .leading, // 체크박스 위치
+                                                    activeColor:
+                                                        const Color.fromARGB(
+                                                          255,
+                                                          83,
+                                                          151,
+                                                          210,
+                                                        ), // 체크됐을 때 색상
+                                                  ),
                                                 ),
                                               ),
-                                            ),
+                                          ],
+                                        )
+                                      : TextField(),
+
+                                  SizedBox(height: 14),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Color(0xFF5B8DEF), // 파랑
+                                          Color(0xFF8E5CF6), // 보라
                                         ],
-                                      )
-                                    : TextField(),
+                                      ),
+                                    ),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        shadowColor: Colors.transparent,
+                                      ),
 
-                                SizedBox(height: 14),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Color(0xFF5B8DEF), // 파랑
-                                        Color(0xFF8E5CF6), // 보라
-                                      ],
+                                      onPressed: () {
+                                        provider.saveCounts(entry.value);
+                                        entry.value.completedDates.add(now);
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.task_alt,
+                                            color: Colors.white,
+                                          ),
+                                          SizedBox(width: 2),
+                                          Text(
+                                            "완료",
+                                            style: TextStyle(color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.transparent,
-                                      shadowColor: Colors.transparent,
-                                    ),
-
-                                    onPressed: () {
-                                      provider.saveCounts(entry.value);
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.task_alt,
-                                          color: Colors.white,
-                                        ),
-                                        SizedBox(width: 2),
-                                        Text(
-                                          "완료",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
                     ],
                   ),
           ),
@@ -382,5 +382,3 @@ class TimerTile extends StatelessWidget {
     );
   }
 }
-
-

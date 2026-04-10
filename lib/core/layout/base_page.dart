@@ -42,7 +42,7 @@ class BasePage extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.add),
-              title: Text('목표 설정'),
+              title: Text('목표 관리'),
               onTap: () {
                 Navigator.push(
                   context,

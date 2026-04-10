@@ -31,13 +31,13 @@ class _RecordPageState extends State<RecordPage> {
   Widget build(BuildContext context) {
     final provider = context.watch<QuestionListProvider>();
 
-    List<Color> ColorArr = [
-      Color(0xFFFF8383),
-      Color(0xFFFFC193),
-      Color(0xFFFFEDCE),
-      Color(0xFFCFECF3),
-      Color(0xFFDAF9DE),
-    ];
+    // List<Color> ColorArr = [
+    //   Color(0xFFFF8383),
+    //   Color(0xFFFFC193),
+    //   Color(0xFFFFEDCE),
+    //   Color(0xFFCFECF3),
+    //   Color(0xFFDAF9DE),
+    // ];
 
     return BasePage(
       title: '기록',
@@ -78,14 +78,16 @@ class _RecordPageState extends State<RecordPage> {
                   DropdownMenuEntry(
                     value: (entry.key),
                     label: entry.value.target,
-                    leadingIcon: Icon(Icons.history),
+                    leadingIcon: Padding(
+                      padding: const EdgeInsets.only(left: 16.0,),
+                      child: Icon(Icons.assignment_outlined),
+                    ),
                   ),
               ],
               onSelected: (int? value) {
                 setState(() {
                   if (value != null) {
                     selectedQuestion = provider.savedQuestions[value];
-                    print("여기");
                     //answersCount가 완전 처음엔 null일수가 있어서 넣은거임
                     if (selectedQuestion!.answersCounts == null) {
                       selectedQuestion!.answersCounts = List.filled(
@@ -93,8 +95,6 @@ class _RecordPageState extends State<RecordPage> {
                         0,
                       );
                     }
-
-                    print(selectedQuestion!.answers);
                   }
                 });
               },
@@ -135,7 +135,10 @@ class _RecordPageState extends State<RecordPage> {
                               decoration: BoxDecoration(
                                 border: Border.all(width: 1),
                               ),
-                              child: DateSelector(now: now),
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: DateSelector(now: now),
+                              ),
                             ),
                           ),
                           Text('부터'),
@@ -153,7 +156,10 @@ class _RecordPageState extends State<RecordPage> {
                               decoration: BoxDecoration(
                                 border: Border.all(width: 1),
                               ),
-                              child: DateSelector(now: now),
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: DateSelector(now: now),
+                              ),
                             ),
                           ),
                           Text('까지'),
@@ -182,11 +188,12 @@ class _RecordPageState extends State<RecordPage> {
                         alignment: Alignment.topCenter,
                         height: 20,
                         decoration: BoxDecoration(
-                          color: ColorArr[entry.key % selectedQuestion!.answers!.length], 
+                          // color: ColorArr[entry.key % selectedQuestion!.answers!.length], 
                           border: Border.all(
                             color: Color(0xFF5B8DEF),
                             width: 2,
                           ),
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
                         ),
                         child: Column(
                           children: [
