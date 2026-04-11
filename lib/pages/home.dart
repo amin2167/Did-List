@@ -12,6 +12,7 @@ import '../models/question.dart';
 import '../providers/question_list_provider.dart';
 import '../widgets/plusAiconButton.dart';
 import '../widgets/calendar_dialog.dart';
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
@@ -47,17 +48,27 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }
   }
-    //완료버튼 눌럿을때 or drops 보여줄때 날짜 비교해서 보여줄지 말지 하게하는 함수
-  bool isSameDay(Set<DateTime> dates, DateTime now) {
 
-    for(var date in dates) {
-      print("저장된날짜:${date}");
-      if(date.year == now.year && date.month == now.month && date.day == now.day) {
+  //drops 보여줄때 날짜 비교해서 보여줄지 말지 하게하는 함수
+  bool isSameDay(Question q, DateTime now) {
+    Set<DateTime> dates = q.dates;
+    for (var date in dates) {
+      if (date.weekday == now.weekday) {
         return true;
       }
     }
     return false;
   }
+
+  bool isComplete (Question q, DateTime now) {
+    for (var date in q.completedDates) {
+      if (date.year == now.year && date.month == now.month && date.day == now.day) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 
   @override
   void dispose() {
@@ -147,10 +158,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   )
                 : ListView(
                     children: [
-                      
                       for (var entry in provider.savedQuestions.asMap().entries)
-                        if(isSameDay(entry.value.dates, now)) //이거로 보여줄지 안보여줄지 하는건디 왜 작동안하지?
+                        if(isSameDay(entry.value, now) && !isComplete(entry.value, now))
                           Card(
+                            //완료 버튼 누르면 이 카드가 없어졋다가 다시 다음주에 나와야대면 또 나와야대는데 여기에 어캐 접근하지;
                             clipBehavior: Clip.antiAlias,
                             elevation: 1,
                             shape: RoundedRectangleBorder(
@@ -182,13 +193,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                         child: Center(
                                           child: Text(
                                             '${entry.key + 1}',
-                                            style: TextStyle(color: Colors.white),
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: Text('${entry.value.target}'),
+                                        child: Text(entry.value.target),
                                       ),
                                       Icon(Icons.task_alt),
                                     ],
@@ -210,7 +223,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 child: Container(
                                                   decoration: BoxDecoration(
                                                     borderRadius:
-                                                        BorderRadius.circular(12),
+                                                        BorderRadius.circular(
+                                                          12,
+                                                        ),
                                                     border: Border.all(
                                                       // 선택된 Set에 인덱스가 포함되어 있으면 파란색 테두리
                                                       color:
@@ -226,7 +241,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                                               134,
                                                               241,
                                                             )
-                                                          : Colors.grey.shade300,
+                                                          : Colors
+                                                                .grey
+                                                                .shade300,
                                                       width: 2,
                                                     ),
                                                   ),
@@ -247,7 +264,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                                           entry
                                                               .value
                                                               .selectedOptions!
-                                                              .remove(option.key);
+                                                              .remove(
+                                                                option.key,
+                                                              );
                                                         }
                                                       });
                                                     },
@@ -286,8 +305,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                       ),
 
                                       onPressed: () {
-                                        provider.saveCounts(entry.value);
-                                        entry.value.completedDates.add(now);
+                                        setState(() {
+                                          provider.saveCounts(entry.value);
+                                          if (!entry.value.completedDates.any(
+                                            (d) =>
+                                                d.year == now.year &&
+                                                d.month == now.month &&
+                                                d.day == now.day,
+                                          )) {
+                                            entry.value.completedDates.add(now);
+                                          }
+                                        });
                                       },
                                       child: Row(
                                         mainAxisAlignment:
@@ -300,7 +328,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                           SizedBox(width: 2),
                                           Text(
                                             "완료",
-                                            style: TextStyle(color: Colors.white),
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ],
                                       ),

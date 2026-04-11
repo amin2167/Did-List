@@ -44,8 +44,9 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     super.initState();
 
     now = DateTime.now();
-
+    
     final q = widget.nowQuestion;
+   
     if (q != null) {
       selectedDayIdx = Set.from(q.datesIdx);
       selectedDays = q.dates;
@@ -66,7 +67,6 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
             .toList();
       }
     }
-    //now (오늘날짜) 설정
   }
 
   //수정하려고하면
@@ -358,12 +358,11 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                     //+버튼이면
                     validation();
                   } else {
-                    print('check');
                     //질문tile이면
                     selectedDays = {};
                     //selectedDayIdx가 추가되면
                     for (var i in selectedDayIdx) {
-                      print(i);
+                      print(selectedDayIdx);
                       selectedDays.add(changeDate(i));
                     }
                     modify();
@@ -394,6 +393,10 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                 AnswerTextField(
                   label: '선지${i + 1}',
                   controller: optionControllers[i],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(Icons.check),
                 ),
                 IconButton(
                   onPressed: () => _removeOption(i),

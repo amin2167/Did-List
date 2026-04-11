@@ -11,7 +11,7 @@ class Question {
   List<int>? answersCounts = []; //선지 몇번이나 햇는지 카운팅
   List<int>? selectedOptions = []; //답변한 선지 인덱스
   Set<DateTime> dates; //날짜
-  List<DateTime> completedDates = [];
+  List<DateTime> completedDates = []; //완료한 날짜
 
 
   Set<int> datesIdx; //이건 로직상 필요해서 걍 추가
