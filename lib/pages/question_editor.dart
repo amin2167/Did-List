@@ -164,7 +164,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     final now = DateTime.now();
     DateTime monday = now.subtract(Duration(days: now.weekday - 1));
     DateTime resultWeekDay = monday.add(Duration(days: diff));
-    return resultWeekDay;
+    return DateTime(resultWeekDay.year, resultWeekDay.month, resultWeekDay.day);
   }
 
   @override
