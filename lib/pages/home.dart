@@ -1,15 +1,12 @@
-import 'package:intl/intl.dart';
+import 'package:flutter_main/widgets/shadow_text_field.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';
 
 import '../widgets/calendar_header.dart';
-import '../widgets/date_selector.dart';
 import '../core/layout/base_page.dart';
 import '../models/question.dart';
 import '../providers/question_list_provider.dart';
-import '../widgets/plusAiconButton.dart';
-import '../widgets/calendar_dialog.dart';
 import '../widgets/complete_button.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -24,11 +21,16 @@ class _MyHomePageState extends State<MyHomePage> {
   Timer? _timer;
 
   Set<int> idxAnswers = {};
+  TextEditingController subjectController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    now = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    now = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+    );
   }
 
   //이게 달력모양 데이트 픽
@@ -144,27 +146,39 @@ class _MyHomePageState extends State<MyHomePage> {
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(entry.value.target),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            entry.value.target,
+                                            softWrap: true,
+                                          ),
+                                        ),
                                       ),
                                       (isComplete(entry.value, now))
-                                      ?Icon(
-                                        Icons.task_alt,
-                                        color: const Color.fromARGB(255, 6, 182, 12),
-                                      )
-                                      :Icon(
-                                        Icons.task_alt,
-                                      )
+                                          ? Icon(
+                                              Icons.task_alt,
+                                              color: const Color.fromARGB(
+                                                255,
+                                                6,
+                                                182,
+                                                12,
+                                              ),
+                                            )
+                                          : Icon(Icons.task_alt),
                                     ],
                                   ),
                                   Column(
                                     children: [
+                                      //질문 타입이 객관식일경우
                                       for (var option
                                           in entry.value.answers!
                                               .asMap()
                                               .entries)
-                                        if (!isComplete(entry.value, now))
+                                        if (!isComplete(entry.value, now) &&
+                                            entry.value.answerType ==
+                                                AnswerType
+                                                    .multipleChoice) //객관식이면 선지 체크박스로 주관식이면 텍스트필드로
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
                                               vertical: 4,
@@ -224,37 +238,52 @@ class _MyHomePageState extends State<MyHomePage> {
                                               ),
                                             ),
                                           ),
+                                      if (entry.value.answerType ==
+                                          AnswerType.subjective)
+                                        TextField(
+                                          controller: subjectController,
+                                        ),
                                     ],
                                   ),
 
-                                  SizedBox(height: 14),
+                                  SizedBox(height: 16),
                                   (!isComplete(entry.value, now))
-                                    ?CompleteButton(
-                                      label: "완료",
-                                      question: entry.value,
-                                      completePush: (q) {
-                                        setState(() {
-                                          provider.saveCounts(q);
-                                          if (!q.completedDates.any(
-                                            (d) =>
-                                                d.year == now.year &&
-                                                d.month == now.month &&
-                                                d.day == now.day,
-                                          )) {
-                                            q.completedDates.add(DateTime(now.year, now.month, now.day));
-                                          }
-                                        });
-                                      },
-                                    )
-                                    :CompleteButton(
-                                      question: entry.value,
-                                      label: "취소",
-                                      completePush: (q) {
-                                        setState(() {
-                                          q.completedDates.remove(now);
-                                        });
-                                      }
-                                    ),
+                                      ? CompleteButton(
+                                          label: "완료",
+                                          question: entry.value,
+                                          completePush: (q) {
+                                            setState(() {
+                                              provider.saveCounts(q);
+                                              if (!q.completedDates.any(
+                                                (d) =>
+                                                    d.year == now.year &&
+                                                    d.month == now.month &&
+                                                    d.day == now.day,
+                                              )) {
+                                                q.completedDates.add(
+                                                  DateTime(
+                                                    now.year,
+                                                    now.month,
+                                                    now.day,
+                                                  ),
+                                                );
+                                              }
+                                            });
+                                          },
+                                        )
+                                      : CompleteButton(
+                                          question: entry.value,
+                                          label: "취소",
+                                          completePush: (q) {
+                                            setState(() {
+                                              q.completedDates.remove(now);
+                                            });
+                                            for(var option in q.selectedOptions) {
+                                              
+                                            }
+                                            
+                                          },
+                                        ),
                                 ],
                               ),
                             ),

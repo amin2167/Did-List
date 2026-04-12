@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_main/widgets/my_text_field.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,8 @@ import '../providers/question_edit_provider.dart';
 import '../providers/question_list_provider.dart';
 import '../widgets/shadow_text_field.dart';
 import '../widgets/answer_text_field.dart';
+import '../widgets/build_type_button.dart';
+import '../widgets/my_text_field.dart';
 
 class AddQuestionPage extends StatefulWidget {
   const AddQuestionPage({super.key, this.nowQuestion});
@@ -110,9 +113,9 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
       id: providerList.savedQuestions.length,
       target: targetController.text,
       answerType: providerEdit.answerType,
+      subjectAnswers: "test",
       answers: optionControllers.map((c) => c.text).toList(),
       dates: selectedDays,
-      isIndicate: true,
       completedDates: [],
       datesIdx: selectedDayIdx,
       isAllweek: isAllweek,
@@ -246,37 +249,9 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                       Expanded(
                         //여기 왜 텍스트 필드 가로 길이가 최대로 안늘어나지?
                         child: ShadowTextField(
-                          textField: TextField(
-                            minLines: 2, // 👈 이 한 줄이 핵심
-                            maxLines: 2,
+                          textField: MyTextField(
                             controller: targetController,
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                            decoration: InputDecoration(
-                              labelText: '목표를 입력하세요.',
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.never,
-                              //filled: true,
-                              // fillColor: const Color.fromARGB(255, 161, 218, 244),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(
-                                  color: Colors.grey,
-                                  width: 1,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                // ← 이거 추가
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(
-                                  color: Colors.blue,
-                                  width: 2,
-                                ),
-                              ),
-                            ),
-                          ),
+                            label: "목표를 입력하세요")
                         ),
                       ),
                     ],
@@ -425,67 +400,6 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
   }
 }
 
-class BuildTypeButton extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const BuildTypeButton({
-    super.key,
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Expanded(
-      // 또는 InkWell
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        height: 50, // 버튼의 적절한 높이
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          // 1. 선택되었을 때만 파란색 보더 적용
-          border: Border.all(
-            color: isSelected ? Colors.blue : Colors.grey.shade300,
-            width: 2.0,
-          ),
-          // 2. 사진처럼 부드러운 그림자 효과 (선택 시 더 강조)
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Material(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: onTap,
-            highlightColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            child: Center(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  color: isSelected ? Colors.black87 : Colors.grey[600],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 // 애는 저장되는 녀석을 다루는 provider
 

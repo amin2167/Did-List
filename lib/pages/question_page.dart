@@ -262,12 +262,17 @@ class QuestionPage extends StatelessWidget {
                                                       ),
                                                     ),
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.symmetric(
-                                                          horizontal: 8,
-                                                        ),
-                                                    child: Text(option.value),
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 8,
+                                                          ),
+                                                      child: Text(
+                                                        option.value,
+                                                        softWrap: true,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ],
                                               ),
