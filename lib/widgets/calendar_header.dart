@@ -10,15 +10,11 @@ class CalendarHeader extends StatelessWidget {
   final DateTime date;
   final Function(DateTime) onDateChanged;
 
-  CalendarHeader({
-    super.key,
-    required this.date,
-    required this.onDateChanged,
-  });
+  CalendarHeader({super.key, required this.date, required this.onDateChanged});
 
   final EasyInfiniteDateTimelineController _controller =
       EasyInfiniteDateTimelineController();
-  
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -32,30 +28,27 @@ class CalendarHeader extends StatelessWidget {
         onDateChanged(selectedDate);
       },
       headerBuilder: (context, data) {
-        return GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            // 네모난 큰 달력 나오게 하는거
-            CalendarDialog.show(
-              context,
-              selectedDay: date, // 현재 home.dart가 가지고 있는 선택된 날짜
-              onDaySelected: (pickedDate) {
-                // 다이얼로그에서 날짜를 찍었을 때 실행될 로직
-                onDateChanged(pickedDate);
-                _controller.animateToDate(pickedDate);
-              },
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                //아래 화살표 잇는 날짜 바꾸려고 하는 버튼
-                DateSelector(now: date),
-                PlusAiconButton(page: const AddQuestionPage(), label: '새 목표'),
-              ],
-            ),
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  CalendarDialog.show(
+                    context,
+                    selectedDay: date,
+                    onDaySelected: (pickedDate) {
+                      onDateChanged(pickedDate);
+                      _controller.animateToDate(pickedDate);
+                    },
+                  );
+                },
+                child: DateSelector(now: date),
+              ),
+              PlusAiconButton(page: const AddQuestionPage(), label: '새 목표'),
+            ],
           ),
         );
       },

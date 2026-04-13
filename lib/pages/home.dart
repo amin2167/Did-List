@@ -208,19 +208,19 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 title: Text(option.value),
                                                 value: entry
                                                     .value
-                                                    .selectedOptions!
+                                                    .selectedOptions
                                                     .contains(option.key),
                                                 onChanged: (bool? checked) {
                                                   setState(() {
                                                     if (checked == true) {
                                                       entry
                                                           .value
-                                                          .selectedOptions!
+                                                          .selectedOptions
                                                           .add(option.key);
                                                     } else {
                                                       entry
                                                           .value
-                                                          .selectedOptions!
+                                                          .selectedOptions
                                                           .remove(option.key);
                                                     }
                                                   });
@@ -277,11 +277,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                           completePush: (q) {
                                             setState(() {
                                               q.completedDates.remove(now);
+                                              if (q.selectedOptions.isNotEmpty) {
+                                                for (var option
+                                                    in q.selectedOptions) {
+                                                    --q.answersCounts[option];
+                                                }
+                                              }
                                             });
-                                            for(var option in q.selectedOptions) {
-                                              
-                                            }
-                                            
+                                            print(entry.value.answersCounts);
                                           },
                                         ),
                                 ],

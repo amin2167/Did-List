@@ -4,10 +4,10 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 
-
 import '../models/question.dart';
 import '../widgets/date_selector.dart';
 import '../providers/question_list_provider.dart';
+import '../widgets/calendar_dialog.dart';
 
 class RecordPage extends StatefulWidget {
   const RecordPage({super.key});
@@ -79,7 +79,7 @@ class _RecordPageState extends State<RecordPage> {
                     value: (entry.key),
                     label: entry.value.target,
                     leadingIcon: Padding(
-                      padding: const EdgeInsets.only(left: 16.0,),
+                      padding: const EdgeInsets.only(left: 16.0),
                       child: Icon(Icons.assignment_outlined),
                     ),
                   ),
@@ -88,13 +88,6 @@ class _RecordPageState extends State<RecordPage> {
                 setState(() {
                   if (value != null) {
                     selectedQuestion = provider.savedQuestions[value];
-                    //answersCount가 완전 처음엔 null일수가 있어서 넣은거임
-                    if (selectedQuestion!.answersCounts == null) {
-                      selectedQuestion!.answersCounts = List.filled(
-                        selectedQuestion!.answers!.length,
-                        0,
-                      );
-                    }
                   }
                 });
               },
@@ -137,7 +130,19 @@ class _RecordPageState extends State<RecordPage> {
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(4.0),
-                                child: DateSelector(now: now),
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    CalendarDialog.show(
+                                      context,
+                                      selectedDay: now,
+                                      onDaySelected: (pickedDate) {
+                                        // onDateChanged(pickedDate);
+                                      },
+                                    );
+                                  },
+                                  child: DateSelector(now: now),
+                                ),
                               ),
                             ),
                           ),
@@ -188,7 +193,7 @@ class _RecordPageState extends State<RecordPage> {
                         alignment: Alignment.topCenter,
                         height: 20,
                         decoration: BoxDecoration(
-                          // color: ColorArr[entry.key % selectedQuestion!.answers!.length], 
+                          // color: ColorArr[entry.key % selectedQuestion!.answers!.length],
                           border: Border.all(
                             color: Color(0xFF5B8DEF),
                             width: 2,

@@ -118,6 +118,8 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
       dates: selectedDays,
       completedDates: [],
       datesIdx: selectedDayIdx,
+      selectedOptions: [],
+      answersCounts: [],
       isAllweek: isAllweek,
     );
 
