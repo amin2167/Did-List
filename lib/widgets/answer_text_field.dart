@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './shadow_text_field.dart';
+import 'shadow_box.dart';
 
 // AnswerTextField는 그대로
 class AnswerTextField extends StatelessWidget {
@@ -18,8 +18,8 @@ class AnswerTextField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.5,
-        child: ShadowTextField(
-          textField: TextField(
+        child: ShadowBox(
+          widget: TextField(
             controller: controller,
             decoration: InputDecoration(
               labelText: label,

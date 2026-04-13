@@ -1,24 +1,7 @@
 // widgets/common_widgets.dart
 
 import 'package:flutter/material.dart';
-
-class AppCard extends StatelessWidget {
-  final Widget child;
-  const AppCard({super.key, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: child,
-    );
-  }
-}
+import '../shadow_box.dart';
 
 class RoundedBox extends StatelessWidget {
   final Widget child;
@@ -29,6 +12,9 @@ class RoundedBox extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
+        border: Border.all(
+          color: Color(0xFF5B8DEF),
+        ),
         color: const Color(0xFFEEF2FF),
         borderRadius: BorderRadius.circular(12),
       ),

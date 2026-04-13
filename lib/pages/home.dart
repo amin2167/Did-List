@@ -1,4 +1,3 @@
-import 'package:flutter_main/widgets/shadow_text_field.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';
@@ -31,22 +30,6 @@ class _MyHomePageState extends State<MyHomePage> {
       DateTime.now().month,
       DateTime.now().day,
     );
-  }
-
-  //이게 달력모양 데이트 픽
-  Future<void> pickDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: now,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-
-    if (picked != null) {
-      setState(() {
-        now = picked;
-      });
-    }
   }
 
   //drops 보여줄때 날짜 비교해서 보여줄지 말지 하게하는 함수
@@ -172,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     children: [
                                       //질문 타입이 객관식일경우
                                       for (var option
-                                          in entry.value.answers!
+                                          in entry.value.answers
                                               .asMap()
                                               .entries)
                                         if (!isComplete(entry.value, now) &&
@@ -192,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                   color:
                                                       entry
                                                           .value
-                                                          .selectedOptions!
+                                                          .selectedOptions
                                                           .contains(option.key)
                                                       ? const Color.fromARGB(
                                                           255,
@@ -252,8 +235,22 @@ class _MyHomePageState extends State<MyHomePage> {
                                           label: "완료",
                                           question: entry.value,
                                           completePush: (q) {
+                                            //완료버튼 누르면 숨기는 로직
                                             setState(() {
+                                              if (q.selectedOptions.isEmpty) {
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      '하나 이상 체크해야합니다.',
+                                                    ),
+                                                  ),
+                                                );
+                                                return;
+                                              }
                                               provider.saveCounts(q);
+                                              print("카운트: ${q.answersCounts}");
                                               if (!q.completedDates.any(
                                                 (d) =>
                                                     d.year == now.year &&
@@ -277,14 +274,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                           completePush: (q) {
                                             setState(() {
                                               q.completedDates.remove(now);
-                                              if (q.selectedOptions.isNotEmpty) {
+                                              if (q
+                                                  .selectedOptions
+                                                  .isNotEmpty) {
                                                 for (var option
                                                     in q.selectedOptions) {
-                                                    --q.answersCounts[option];
+                                                  q.answersCounts[option]--;
                                                 }
                                               }
                                             });
-                                            print(entry.value.answersCounts);
                                           },
                                         ),
                                 ],
@@ -299,67 +297,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-//시간버튼 누르는곳
-// class TimerTile extends StatelessWidget {
-//   final DateTime date;
-//   final VoidCallback tap;
-
-//   const TimerTile({super.key, required this.date, required this.tap});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final formatter = DateFormat('yyyy-MM-dd');
-//     final today = formatter.format(date); // "2026년 01월 15일"
-
-//     // TODO: implement build
-//     return Column(
-//       children: [
-//         Card(
-//           clipBehavior: Clip.antiAlias,
-//           margin: EdgeInsets.only(bottom: 20),
-//           elevation: 1, // 그림자
-//           shape: RoundedRectangleBorder(
-//             borderRadius: BorderRadius.circular(12),
-//             side: BorderSide(
-//               color: Colors.grey.shade300, // 테두리 색
-//               width: 1,
-//             ),
-//           ),
-
-//           child: InkWell(
-//             onTap: () => tap(),
-//             child: Padding(
-//               padding: const EdgeInsets.all(16.0),
-//               child: Row(
-//                 children: [
-//                   Container(
-//                     width: 40,
-//                     height: 40,
-//                     decoration: BoxDecoration(
-//                       borderRadius: BorderRadius.circular(12),
-//                       gradient: LinearGradient(
-//                         colors: [
-//                           Color(0xFF5B8DEF), // 파랑
-//                           Color(0xFF8E5CF6), // 보라
-//                         ],
-//                       ),
-//                     ),
-//                     child: Icon(
-//                       Icons.calendar_today_outlined,
-//                       color: Colors.white,
-//                     ),
-//                   ),
-//                   Padding(
-//                     padding: const EdgeInsets.all(8.0),
-//                     child: Text(today, style: TextStyle(fontSize: 15)),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }

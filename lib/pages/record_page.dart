@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_main/core/layout/base_page.dart';
+import 'package:flutter_main/widgets/shadow_box.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
+import 'package:easy_date_timeline/easy_date_timeline.dart';
 
 import '../models/question.dart';
 import '../widgets/date_selector.dart';
 import '../providers/question_list_provider.dart';
+import '../widgets/calendar_dialog.dart';
+import '../widgets/record_page/record_page_widgets.dart';
+import '../widgets/shadow_box.dart';
 import '../widgets/calendar_dialog.dart';
 
 class RecordPage extends StatefulWidget {
@@ -19,7 +24,18 @@ class RecordPage extends StatefulWidget {
 class _RecordPageState extends State<RecordPage> {
   late DateTime now;
   Question? selectedQuestion;
+  late DateTime startDate = DateTime.now();
+  late DateTime endDate = DateTime.now();
 
+  
+
+  // List<Color> colorArr = [
+  //     Color(0xFFFF8383),
+  //     Color(0xFFFFC193),
+  //     Color(0xFFFFEDCE),
+  //     Color(0xFFCFECF3),
+  //     Color(0xFFDAF9DE),
+  //   ];
   @override
   void initState() {
     // TODO: implement initState
@@ -27,156 +43,148 @@ class _RecordPageState extends State<RecordPage> {
     now = DateTime.now();
   }
 
+  bool isFitTime(DateTime date1) {
+    
+
+    return true;
+  }
+  
+
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<QuestionListProvider>();
-
-    // List<Color> ColorArr = [
-    //   Color(0xFFFF8383),
-    //   Color(0xFFFFC193),
-    //   Color(0xFFFFEDCE),
-    //   Color(0xFFCFECF3),
-    //   Color(0xFFDAF9DE),
-    // ];
-
     return BasePage(
       title: '기록',
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+      child: SafeArea(
         child: Column(
           children: [
-            DropdownMenu<int>(
-              //이걸 가로를 화면 넓이까지 하고싶은데 width안넣고
-              // 1. 이미지처럼 너비를 꽉 채우려면 지정 (부모 크기에 맞춤)
-              requestFocusOnTap: false,
-              width: double.infinity,
-
-              // 2. 초기 힌트 텍스트 및 스타일
-              label: const Text("목표선택"),
-              hintText: "목표를 선택해주세요",
-
-              // 3. 테두리 및 디자인 (이미지의 파란색 테두리 느낌)
-              inputDecorationTheme: InputDecorationTheme(
-                filled: true,
-                fillColor: Colors.grey.shade50,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(
-                    color: Color(0xFF5B8DEF),
-                    width: 2,
-                  ),
-                ),
-              ),
-
-              // 4. 화살표 아이콘 변경
-              trailingIcon: const Icon(Icons.keyboard_arrow_down),
-
-              // 5. 메뉴 구성 요소
-              dropdownMenuEntries: [
-                for (var entry in provider.savedQuestions.asMap().entries)
-                  DropdownMenuEntry(
-                    value: (entry.key),
-                    label: entry.value.target,
-                    leadingIcon: Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
-                      child: Icon(Icons.assignment_outlined),
-                    ),
-                  ),
-              ],
-              onSelected: (int? value) {
-                setState(() {
-                  if (value != null) {
-                    selectedQuestion = provider.savedQuestions[value];
-                  }
-                });
-              },
-            ),
-            SizedBox(height: 6),
-            Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: InputDecorator(
-                decoration: InputDecoration(
-                  labelText: "기간 선택", // 테두리 사이에 들어가는 라벨
-                  filled: true,
-                  fillColor: Colors.grey.shade50,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: const BorderSide(
-                      color: Color(0xFF5B8DEF),
-                      width: 2,
-                    ),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.start, //<<이거 왜 안먹지 start?
+            // 스크롤 영역
+            SingleChildScrollView(
+              // padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 목표 선택 카드
+                  ShadowBox(
+                    widget: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(Icons.calendar_today),
-                          SizedBox(width: 8),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(width: 1),
+                          const SizedBox(height: 8),
+                          DropdownMenu<int>(
+                            requestFocusOnTap: true,
+                            width: double.infinity,
+                            label: const Text("목표선택"),
+                            hintText: "목표를 선택해주세요",
+                            inputDecorationTheme: InputDecorationTheme(
+                              filled: true,
+                              fillColor: Colors.grey.shade50,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onTap: () {
-                                    CalendarDialog.show(
-                                      context,
-                                      selectedDay: now,
-                                      onDaySelected: (pickedDate) {
-                                        // onDateChanged(pickedDate);
-                                      },
-                                    );
-                                  },
-                                  child: DateSelector(now: now),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                  // color: Color(0xFF5B8DEF),
+                                  width: 2,
                                 ),
                               ),
                             ),
+                            trailingIcon: const Icon(Icons.keyboard_arrow_down),
+                            dropdownMenuEntries: [
+                              for (var entry
+                                  in provider.savedQuestions.asMap().entries)
+                                DropdownMenuEntry(
+                                  value: entry.key,
+                                  label: entry.value.target,
+                                  leadingIcon: const Padding(
+                                    padding: EdgeInsets.only(left: 16.0),
+                                    child: Icon(Icons.assignment_outlined),
+                                  ),
+                                ),
+                            ],
+                            onSelected: (int? value) {
+                              setState(() {
+                                if (value != null) {
+                                  selectedQuestion =
+                                      provider.savedQuestions[value];
+                                  if (selectedQuestion!.answersCounts.isEmpty) {
+                                    selectedQuestion!.answersCounts =
+                                        List.filled(
+                                          selectedQuestion!.answers.length,
+                                          0,
+                                        );
+                                  }
+                                }
+                              });
+                            },
                           ),
-                          Text('부터'),
                         ],
                       ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(Icons.calendar_today),
-                          SizedBox(width: 8),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(width: 1),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: DateSelector(now: now),
+                  // 기간 선택 카드
+                  ShadowBox(
+                    widget: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Container(
+                        decoration: BoxDecoration(color: Colors.grey.shade50),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              '기간 선택',
+                              style: TextStyle(color: Colors.grey, fontSize: 13),
+                            ),
+                            const SizedBox(height: 12),
+                            GestureDetector(
+                              onTap: () {
+                                CalendarDialog.show(
+                                  context,
+                                  selectedDay: startDate,
+                                  onDaySelected: (pickedDate) {
+                                    setState(() {
+                                      startDate = pickedDate;
+                                    });
+                                  },
+                                );
+                              },
+                              child: DateRow(
+                                date: DateFormat('yyyy-MM-dd').format(startDate),
+                                label: '부터',
                               ),
                             ),
-                          ),
-                          Text('까지'),
-                        ],
+                            const SizedBox(height: 8),
+                            GestureDetector(
+                              onTap: () {
+                                CalendarDialog.show(
+                                  context,
+                                  selectedDay: endDate,
+                                  onDaySelected: (pickedDate) {
+                                    setState(() {
+                                      endDate = pickedDate;
+                                    });
+                                  },
+                                );
+                              },
+                              child: DateRow(
+                                date: DateFormat('yyyy-MM-dd').format(endDate),
+                                label: '까지',
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 16),
+                ],
               ),
             ),
-            SizedBox(height: 6),
-
             Expanded(
               child: GridView.count(
                 mainAxisSpacing: 6, // 세로 아이템 간 간격 제거
@@ -186,10 +194,10 @@ class _RecordPageState extends State<RecordPage> {
                 padding: EdgeInsets.zero,
                 children: [
                   if (selectedQuestion != null &&
-                      selectedQuestion!.answers != null)
-                    for (var entry
-                        in selectedQuestion!.answers!.asMap().entries)
-                      Container(
+                      selectedQuestion!.answers != [])
+                    for (var entry in selectedQuestion!.answers.asMap().entries)
+                      
+                      Container( //이게 타겟이랑 횟수 카드
                         alignment: Alignment.topCenter,
                         height: 20,
                         decoration: BoxDecoration(
@@ -214,7 +222,7 @@ class _RecordPageState extends State<RecordPage> {
                                 alignment:
                                     Alignment.center, // 3. 0회 글자: 남은 공간의 정중앙
                                 child: Text(
-                                  "${selectedQuestion!.answersCounts![entry.key]} 회",
+                                  "${selectedQuestion!.answersCounts[entry.key]} 회",
                                   style: const TextStyle(fontSize: 16),
                                 ),
                               ),

@@ -34,17 +34,19 @@ class QuestionListProvider extends ChangeNotifier {
 
   void saveAnswer(Question q, Set<int> answers) {
     for(var a in answers) {
-      if(q.selectedOptions != null) {
-        q.selectedOptions!.add(a);
+      if(q.selectedOptions != []) {
+        q.selectedOptions.add(a);
       }
     }
     notifyListeners();
   }
 
   void saveCounts(Question q) {
+    q.answersCounts = List.filled(q.answers.length, 0);
+
     if(q.selectedOptions.isNotEmpty) {
-        q.answersCounts = List.filled(q.answers!.length, 0);
-      for(var k in q.selectedOptions) {      
+      for(var k in q.selectedOptions) { 
+        print("+댐");     
         q.answersCounts[k]++;
       }
     }

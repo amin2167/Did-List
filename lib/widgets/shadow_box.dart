@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 //이거 아직 안쓰는중임 2026-03-25
-class ShadowTextField extends StatelessWidget {
-  Widget textField;
+class ShadowBox extends StatelessWidget {
+  Widget widget;
 
-  ShadowTextField({super.key, required this.textField});
+  ShadowBox({super.key, required this.widget});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class ShadowTextField extends StatelessWidget {
           ),
         ],
       ),
-      child: textField,
+      child: widget,
     );
   }
 }

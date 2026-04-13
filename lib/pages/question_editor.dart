@@ -8,10 +8,9 @@ import '../core/layout/base_page.dart';
 import '../models/question.dart';
 import '../providers/question_edit_provider.dart';
 import '../providers/question_list_provider.dart';
-import '../widgets/shadow_text_field.dart';
+import '../widgets/shadow_box.dart';
 import '../widgets/answer_text_field.dart';
 import '../widgets/build_type_button.dart';
-import '../widgets/my_text_field.dart';
 
 class AddQuestionPage extends StatefulWidget {
   const AddQuestionPage({super.key, this.nowQuestion});
@@ -29,9 +28,6 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     2,
     (_) => TextEditingController(),
   );
-
-  final EasyInfiniteDateTimelineController _controller =
-      EasyInfiniteDateTimelineController();
 
   late DateTime now;
 
@@ -65,7 +61,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
         for (final c in optionControllers) {
           c.dispose();
         }
-        optionControllers = q.answers!
+        optionControllers = q.answers
             .map((v) => TextEditingController(text: v))
             .toList();
       }
@@ -250,8 +246,8 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                     children: [
                       Expanded(
                         //여기 왜 텍스트 필드 가로 길이가 최대로 안늘어나지?
-                        child: ShadowTextField(
-                          textField: MyTextField(
+                        child: ShadowBox(
+                          widget: MyTextField(
                             controller: targetController,
                             label: "목표를 입력하세요")
                         ),
@@ -339,7 +335,6 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                     selectedDays = {};
                     //selectedDayIdx가 추가되면
                     for (var i in selectedDayIdx) {
-                      print(selectedDayIdx);
                       selectedDays.add(changeDate(i));
                     }
                     modify();

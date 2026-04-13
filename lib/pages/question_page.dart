@@ -234,9 +234,9 @@ class QuestionPage extends StatelessWidget {
 
                                         if (entry.value.answerType ==
                                                 AnswerType.multipleChoice &&
-                                            entry.value.answers != null)
+                                            entry.value.answers != [])
                                           for (final option
-                                              in entry.value.answers!
+                                              in entry.value.answers
                                                   .asMap()
                                                   .entries)
                                             Padding(

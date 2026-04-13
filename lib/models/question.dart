@@ -7,7 +7,7 @@ class Question {
   int id;
   String target;
   AnswerType answerType;
-  List<String>? answers = []; //선지 리스트 (객관식만)
+  List<String> answers = []; //선지 리스트 (객관식만)
   String subjectAnswers; //주관식 답변
   List<int> answersCounts = []; //선지 몇번이나 햇는지 카운팅
   List<int> selectedOptions = []; //답변한 선지 인덱스
@@ -25,7 +25,7 @@ class Question {
     required this.answerType,
     required this.completedDates,
     required this.subjectAnswers,
-    this.answers,
+    required this.answers,
     required this.answersCounts,
     required this.dates,
     required this.datesIdx,
