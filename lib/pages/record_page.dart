@@ -22,12 +22,9 @@ class RecordPage extends StatefulWidget {
 }
 
 class _RecordPageState extends State<RecordPage> {
-  late DateTime now;
   Question? selectedQuestion;
-  late DateTime startDate = DateTime.now();
-  late DateTime endDate = DateTime.now();
-
-  
+  DateTime startDate = DateTime.now().subtract(Duration(days: 31));
+  DateTime endDate = DateTime.now();
 
   // List<Color> colorArr = [
   //     Color(0xFFFF8383),
@@ -40,16 +37,23 @@ class _RecordPageState extends State<RecordPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    now = DateTime.now();
   }
 
-  bool isFitTime(DateTime date1) {
-    
+  int dateAnswerCounts(Question q, DateTime start, DateTime end) {
+    int sum = 0;
+    int i = 0;
 
-    return true;
+    if (q.completedDates != null) {
+      for (var date in q.completedDates) {
+        print("완료:${q.completedDates}");
+        if (!date.isBefore(start) && !date.isAfter(end)) {
+          sum += q.answersCounts[i];
+        }
+        i++;
+      }
+    }
+    return sum;
   }
-  
-
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +91,7 @@ class _RecordPageState extends State<RecordPage> {
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(16),
                                 borderSide: const BorderSide(
-                                  // color: Color(0xFF5B8DEF),
+                                  color: Color(0xFF5B8DEF),
                                   width: 2,
                                 ),
                               ),
@@ -138,7 +142,10 @@ class _RecordPageState extends State<RecordPage> {
                           children: [
                             const Text(
                               '기간 선택',
-                              style: TextStyle(color: Colors.grey, fontSize: 13),
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 13,
+                              ),
                             ),
                             const SizedBox(height: 12),
                             GestureDetector(
@@ -154,7 +161,9 @@ class _RecordPageState extends State<RecordPage> {
                                 );
                               },
                               child: DateRow(
-                                date: DateFormat('yyyy-MM-dd').format(startDate),
+                                date: DateFormat(
+                                  'yyyy-MM-dd',
+                                ).format(startDate),
                                 label: '부터',
                               ),
                             ),
@@ -196,8 +205,8 @@ class _RecordPageState extends State<RecordPage> {
                   if (selectedQuestion != null &&
                       selectedQuestion!.answers != [])
                     for (var entry in selectedQuestion!.answers.asMap().entries)
-                      
-                      Container( //이게 타겟이랑 횟수 카드
+                      Container(
+                        //이게 타겟이랑 횟수 카드
                         alignment: Alignment.topCenter,
                         height: 20,
                         decoration: BoxDecoration(
@@ -222,7 +231,7 @@ class _RecordPageState extends State<RecordPage> {
                                 alignment:
                                     Alignment.center, // 3. 0회 글자: 남은 공간의 정중앙
                                 child: Text(
-                                  "${selectedQuestion!.answersCounts[entry.key]} 회",
+                                  "${dateAnswerCounts(selectedQuestion!, startDate, endDate)} 회",
                                   style: const TextStyle(fontSize: 16),
                                 ),
                               ),

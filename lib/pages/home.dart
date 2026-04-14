@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 import '../widgets/calendar_header.dart';
 import '../core/layout/base_page.dart';
@@ -34,8 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //drops 보여줄때 날짜 비교해서 보여줄지 말지 하게하는 함수
   bool isSameDay(Question q, DateTime now) {
-    Set<DateTime> dates = q.dates;
-    for (var date in dates) {
+    for (var date in q.dates) {
       if (date.weekday == now.weekday) {
         return true;
       }
@@ -53,6 +53,18 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     return false;
   }
+
+ void saveCounts(Question q) {
+    q.answersCounts = List.filled(q.answers.length, 0);
+
+    if(q.selectedOptions.isNotEmpty) {
+      for(var k in q.selectedOptions) { 
+        q.answersCounts[k]++;
+      }
+    }
+  }
+
+
 
   @override
   void dispose() {
@@ -171,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 borderRadius:
                                                     BorderRadius.circular(12),
                                                 border: Border.all(
-                                                  // 선택된 Set에 인덱스가 포함되어 있으면 파란색 테두리
+                                                  //체크박스 파란색 대는 부분
                                                   color:
                                                       entry
                                                           .value
@@ -196,10 +208,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 onChanged: (bool? checked) {
                                                   setState(() {
                                                     if (checked == true) {
-                                                      entry
-                                                          .value
-                                                          .selectedOptions
-                                                          .add(option.key);
+                                                     entry.value.selectedOptions
+                                                    .add(option.key);
                                                     } else {
                                                       entry
                                                           .value
@@ -207,6 +217,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                           .remove(option.key);
                                                     }
                                                   });
+                                                  print(entry.value.selectedOptions);
                                                 },
                                                 controlAffinity:
                                                     ListTileControlAffinity
@@ -249,8 +260,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 );
                                                 return;
                                               }
-                                              provider.saveCounts(q);
-                                              print("카운트: ${q.answersCounts}");
+                                  
                                               if (!q.completedDates.any(
                                                 (d) =>
                                                     d.year == now.year &&
@@ -264,6 +274,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     now.day,
                                                   ),
                                                 );
+                                                saveCounts(q);
                                               }
                                             });
                                           },

@@ -40,16 +40,6 @@ class QuestionListProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-
-  void saveCounts(Question q) {
-    q.answersCounts = List.filled(q.answers.length, 0);
-
-    if(q.selectedOptions.isNotEmpty) {
-      for(var k in q.selectedOptions) { 
-        print("+댐");     
-        q.answersCounts[k]++;
-      }
-    }
-    notifyListeners();
-  }
 }
+
+ 
