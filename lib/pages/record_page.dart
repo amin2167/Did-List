@@ -205,6 +205,7 @@ class _RecordPageState extends State<RecordPage> {
                   if (selectedQuestion != null &&
                       selectedQuestion!.answers != [])
                     for (var entry in selectedQuestion!.answers.asMap().entries)
+                      
                       Container(
                         //이게 타겟이랑 횟수 카드
                         alignment: Alignment.topCenter,

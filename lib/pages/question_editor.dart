@@ -124,7 +124,6 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text('저장되었습니다!')));
-
     Navigator.pop(context);
   }
 
