@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_main/widgets/my_text_field.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:provider/provider.dart';
 
 import '../core/layout/base_page.dart';
@@ -9,8 +8,10 @@ import '../models/question.dart';
 import '../providers/question_edit_provider.dart';
 import '../providers/question_list_provider.dart';
 import '../widgets/shadow_box.dart';
-import '../widgets/answer_text_field.dart';
-import '../widgets/build_type_button.dart';
+import '../widgets/question_page/answer_text_field.dart';
+import '../widgets/question_page/build_type_button.dart';
+import '../widgets/question_page/calendar_dialog_editing.dart';
+import '../widgets/question_page/question_drops.dart';
 
 class AddQuestionPage extends StatefulWidget {
   const AddQuestionPage({super.key, this.nowQuestion});
@@ -22,7 +23,6 @@ class AddQuestionPage extends StatefulWidget {
 }
 
 class _AddQuestionPageState extends State<AddQuestionPage> {
-
   TextEditingController targetController = TextEditingController();
   List<TextEditingController> optionControllers = List.generate(
     2,
@@ -34,7 +34,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
   TextEditingController dateController = TextEditingController();
 
   bool isAllweek = true;
-  Set<int> selectedDayIdx = {};
+  List<int> selectedDayIdx = [];
   Set<DateTime> selectedDays = {};
   final List<String> weekDayLabels = ['월', '화', '수', '목', '금', '토', '일'];
 
@@ -43,11 +43,11 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     super.initState();
 
     now = DateTime.now();
-    
+
     final q = widget.nowQuestion;
-   
+
     if (q != null) {
-      selectedDayIdx = Set.from(q.datesIdx);
+      selectedDayIdx = List.from(q.datesIdx);
       selectedDays = q.dates;
       isAllweek = q.isAllweek;
     }
@@ -77,6 +77,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     }
     super.dispose();
   }
+
   void validation() {
     final providerEdit = context.read<QuestionEditProvider>();
     final providerList = context.read<QuestionListProvider>();
@@ -183,57 +184,10 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                   Text('날짜'),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(7, (index) {
-                        bool isSelected = selectedDayIdx.contains(index);
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              if (isSelected) {
-                                selectedDayIdx.remove(index);
-                              } else {
-                                selectedDayIdx.add(index);
-                              }
-                            });
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 10),
-                            width: MediaQuery.of(context).size.width * 0.11,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              gradient: isSelected
-                                  ? const LinearGradient(
-                                      colors: [
-                                        Color(0xFF5B8DEF),
-                                        Color(0xFF8E5CF6),
-                                      ],
-                                    )
-                                  : null,
-                              color: isSelected ? null : Colors.white,
-                              border: Border.all(
-                                color: isSelected
-                                    ? Colors.transparent
-                                    : Colors.grey.shade300,
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                weekDayLabels[index],
-                                style: TextStyle(
-                                  color: isSelected
-                                      ? Colors.white
-                                      : Colors.black87,
-                                  fontWeight: isSelected
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
+                    child: QuestionDrops(
+                      selectedDates: selectedDays,
+                      selectedDayIdx: selectedDayIdx,
+                      weekDayLabels: weekDayLabels,
                     ),
                   ),
                   Padding(
@@ -244,11 +198,11 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                   Row(
                     children: [
                       Expanded(
-                        //여기 왜 텍스트 필드 가로 길이가 최대로 안늘어나지?
                         child: ShadowBox(
                           widget: MyTextField(
                             controller: targetController,
-                            label: "목표를 입력하세요")
+                            label: "목표를 입력하세요",
+                          ),
                         ),
                       ),
                     ],
@@ -293,22 +247,35 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                     children: [
                       BuildTypeButton(
                         label: '매주',
-                        onTap: () {
-                          isAllweek = true;
-                          setState(() {});
-                        },
                         isSelected: isAllweek == true,
+                        onTap: () {
+                          setState(() {
+                            isAllweek = true;
+                          });
+                        },
                       ),
 
                       const SizedBox(width: 16), // 버튼 사이 간격
-
                       BuildTypeButton(
                         label: '하루만',
-                        onTap: () {
-                          isAllweek = false;
-                          setState(() {});
-                        },
                         isSelected: isAllweek == false,
+                        onTap: () {
+                          setState(() {
+                            isAllweek = false;
+                          });
+
+                          CalendarDialogEditing.show(
+                            context,
+                            selectedDays: selectedDays,
+                            onDaysUpdated: (days) {
+                              setState(() {
+                                selectedDayIdx = days
+                                    .map((date) => date.weekday - 1)
+                                    .toList();
+                              });
+                            },
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -365,9 +332,17 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                   label: '선지${i + 1}',
                   controller: optionControllers[i],
                 ),
+
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Icon(Icons.check),
+                  child: Icon(
+                    Icons.task_alt,
+                    color:
+                        (widget.nowQuestion?.selectedOptions.contains(i) ??
+                            false)
+                        ? Colors.green
+                        : Colors.grey,
+                  ),
                 ),
                 IconButton(
                   onPressed: () => _removeOption(i),
@@ -395,7 +370,6 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     }
   }
 }
-
 
 // 애는 저장되는 녀석을 다루는 provider
 

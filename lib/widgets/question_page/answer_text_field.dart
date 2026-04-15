@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'shadow_box.dart';
+import '../shadow_box.dart';
 
 // AnswerTextField는 그대로
 class AnswerTextField extends StatelessWidget {

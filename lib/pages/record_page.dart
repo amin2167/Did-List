@@ -24,7 +24,7 @@ class RecordPage extends StatefulWidget {
 class _RecordPageState extends State<RecordPage> {
   Question? selectedQuestion;
   DateTime startDate = DateTime.now().subtract(Duration(days: 31));
-  DateTime endDate = DateTime.now();
+  DateTime endDate = DateTime.now().add(Duration(days: 7));
 
   // List<Color> colorArr = [
   //     Color(0xFFFF8383),
@@ -45,7 +45,6 @@ class _RecordPageState extends State<RecordPage> {
 
     if (q.completedDates != null) {
       for (var date in q.completedDates) {
-        print("완료:${q.completedDates}");
         if (!date.isBefore(start) && !date.isAfter(end)) {
           sum += q.answersCounts[i];
         }
@@ -205,7 +204,6 @@ class _RecordPageState extends State<RecordPage> {
                   if (selectedQuestion != null &&
                       selectedQuestion!.answers != [])
                     for (var entry in selectedQuestion!.answers.asMap().entries)
-                      
                       Container(
                         //이게 타겟이랑 횟수 카드
                         alignment: Alignment.topCenter,

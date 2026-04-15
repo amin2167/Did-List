@@ -48,10 +48,6 @@ class QuestionPage extends StatelessWidget {
                           in provider.savedQuestions.asMap().entries)
                         InkWell(
                           onTap: () {
-                            print(
-                              "test",
-                            ); //이게 왜 안나옴? addquestionpage로 이동은 잘대는대?
-                            print(provider.savedQuestions[0].answers);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -187,20 +183,6 @@ class QuestionPage extends StatelessWidget {
                                                 );
                                               },
                                             ),
-                                            //삭제버튼 아이콘
-                                            // IconButton(
-                                            //   iconSize: 30,
-                                            //   constraints: BoxConstraints(),
-                                            //   icon: const Icon(
-                                            //     Icons.delete,
-                                            //     color: Colors.red,
-                                            //   ),
-                                            //   onPressed: () {
-                                            //     provider.deleteQuestion(
-                                            //       entry.value,
-                                            //     );
-                                            //   },
-                                            // ),
                                           ],
                                         ),
 

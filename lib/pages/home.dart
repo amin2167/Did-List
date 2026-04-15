@@ -8,6 +8,8 @@ import '../core/layout/base_page.dart';
 import '../models/question.dart';
 import '../providers/question_list_provider.dart';
 import '../widgets/complete_button.dart';
+import '../models/state_week.dart';
+import '../widgets/goal_card.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -19,7 +21,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late DateTime now;
   Timer? _timer;
-
   Set<int> idxAnswers = {};
   TextEditingController subjectController = TextEditingController();
 
@@ -33,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  //drops 보여줄때 날짜 비교해서 보여줄지 말지 하게하는 함수
+  //   //drops클릭해서 보여줄때 날짜 비교해서 보여줄지 말지 하게하는 함수
   bool isSameDay(Question q, DateTime now) {
     for (var date in q.dates) {
       if (date.weekday == now.weekday) {
@@ -43,28 +44,14 @@ class _MyHomePageState extends State<MyHomePage> {
     return false;
   }
 
-  bool isComplete(Question q, DateTime now) {
-    for (var date in q.completedDates) {
-      if (date.year == now.year &&
-          date.month == now.month &&
-          date.day == now.day) {
+  bool isNotWeekDay(Question q, DateTime now) {
+    for (var date in q.dates) {
+      if (date == now) {
         return true;
       }
     }
     return false;
   }
-
- void saveCounts(Question q) {
-    q.answersCounts = List.filled(q.answers.length, 0);
-
-    if(q.selectedOptions.isNotEmpty) {
-      for(var k in q.selectedOptions) { 
-        q.answersCounts[k]++;
-      }
-    }
-  }
-
-
 
   @override
   void dispose() {
@@ -103,202 +90,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 : ListView(
                     children: [
                       for (var entry in provider.savedQuestions.asMap().entries)
-                        if (isSameDay(entry.value, now))
-                          Card(
-                            elevation: 1,
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                color: Colors.grey.shade300, // 테두리 색
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        width: 30,
-                                        height: 30,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              Color(0xFF5B8DEF), // 파랑
-                                              Color(0xFF8E5CF6), // 보라
-                                            ],
-                                          ),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            '${entry.key + 1}',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            entry.value.target,
-                                            softWrap: true,
-                                          ),
-                                        ),
-                                      ),
-                                      (isComplete(entry.value, now))
-                                          ? Icon(
-                                              Icons.task_alt,
-                                              color: const Color.fromARGB(
-                                                255,
-                                                6,
-                                                182,
-                                                12,
-                                              ),
-                                            )
-                                          : Icon(Icons.task_alt),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      //질문 타입이 객관식일경우
-                                      for (var option
-                                          in entry.value.answers
-                                              .asMap()
-                                              .entries)
-                                        if (!isComplete(entry.value, now) &&
-                                            entry.value.answerType ==
-                                                AnswerType
-                                                    .multipleChoice) //객관식이면 선지 체크박스로 주관식이면 텍스트필드로
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 4,
-                                            ),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                border: Border.all(
-                                                  //체크박스 파란색 대는 부분
-                                                  color:
-                                                      entry
-                                                          .value
-                                                          .selectedOptions
-                                                          .contains(option.key)
-                                                      ? const Color.fromARGB(
-                                                          255,
-                                                          2,
-                                                          134,
-                                                          241,
-                                                        )
-                                                      : Colors.grey.shade300,
-                                                  width: 2,
-                                                ),
-                                              ),
-                                              child: CheckboxListTile(
-                                                title: Text(option.value),
-                                                value: entry
-                                                    .value
-                                                    .selectedOptions
-                                                    .contains(option.key),
-                                                onChanged: (bool? checked) {
-                                                  setState(() {
-                                                    if (checked == true) {
-                                                     entry.value.selectedOptions
-                                                    .add(option.key);
-                                                    } else {
-                                                      entry
-                                                          .value
-                                                          .selectedOptions
-                                                          .remove(option.key);
-                                                    }
-                                                  });
-                                                  print(entry.value.selectedOptions);
-                                                },
-                                                controlAffinity:
-                                                    ListTileControlAffinity
-                                                        .leading, // 체크박스 위치
-                                                activeColor:
-                                                    const Color.fromARGB(
-                                                      255,
-                                                      83,
-                                                      151,
-                                                      210,
-                                                    ), // 체크됐을 때 색상
-                                              ),
-                                            ),
-                                          ),
-                                      if (entry.value.answerType ==
-                                          AnswerType.subjective)
-                                        TextField(
-                                          controller: subjectController,
-                                        ),
-                                    ],
-                                  ),
-
-                                  SizedBox(height: 16),
-                                  (!isComplete(entry.value, now))
-                                      ? CompleteButton(
-                                          label: "완료",
-                                          question: entry.value,
-                                          completePush: (q) {
-                                            //완료버튼 누르면 숨기는 로직
-                                            setState(() {
-                                              if (q.selectedOptions.isEmpty) {
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      '하나 이상 체크해야합니다.',
-                                                    ),
-                                                  ),
-                                                );
-                                                return;
-                                              }
-                                  
-                                              if (!q.completedDates.any(
-                                                (d) =>
-                                                    d.year == now.year &&
-                                                    d.month == now.month &&
-                                                    d.day == now.day,
-                                              )) {
-                                                q.completedDates.add(
-                                                  DateTime(
-                                                    now.year,
-                                                    now.month,
-                                                    now.day,
-                                                  ),
-                                                );
-                                                saveCounts(q);
-                                              }
-                                            });
-                                          },
-                                        )
-                                      : CompleteButton(
-                                          question: entry.value,
-                                          label: "취소",
-                                          completePush: (q) {
-                                            setState(() {
-                                              q.completedDates.remove(now);
-                                              if (q
-                                                  .selectedOptions
-                                                  .isNotEmpty) {
-                                                for (var option
-                                                    in q.selectedOptions) {
-                                                  q.answersCounts[option]--;
-                                                }
-                                              }
-                                            });
-                                          },
-                                        ),
-                                ],
-                              ),
-                            ),
+                        if (entry.value.isAllweek
+                            ? isSameDay(entry.value, now)
+                            : isNotWeekDay(entry.value, now))
+                          // if (isSameDay(entry.value, now) == Status.isSame)//이게문제네
+                          GoalCard(
+                            now: now,
+                            entry: entry,
+                            idxAnswers: idxAnswers,
+                            subjectController: subjectController,
                           ),
                     ],
                   ),
