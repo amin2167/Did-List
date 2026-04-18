@@ -9,7 +9,7 @@ import '../models/question.dart';
 import '../providers/question_list_provider.dart';
 import '../widgets/complete_button.dart';
 import '../models/state_week.dart';
-import '../widgets/goal_card.dart';
+import '../widgets/question_page/goal_card.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -93,7 +93,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         if (entry.value.isAllweek
                             ? isSameDay(entry.value, now)
                             : isNotWeekDay(entry.value, now))
-                          // if (isSameDay(entry.value, now) == Status.isSame)//이게문제네
                           GoalCard(
                             now: now,
                             entry: entry,

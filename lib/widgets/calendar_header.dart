@@ -55,7 +55,15 @@ class CalendarHeader extends StatelessWidget {
 
       dayProps: EasyDayProps(
         height: MediaQuery.of(context).size.height * 0.08,
+        // width: MediaQuery.of(context).size.width / 5.5,
         dayStructure: DayStructure.dayStrDayNum,
+        // inactiveDayStyle: DayStyle(
+        //   decoration: BoxDecoration( 
+        //     borderRadius: BorderRadius.all(Radius.circular(16)),
+        //     border: Border.all(
+        //     color: Colors.grey.shade300,),
+        //   ),
+        // ) ,
         activeDayStyle: DayStyle(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(16)),

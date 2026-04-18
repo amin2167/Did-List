@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_main/core/layout/base_page.dart';
+import 'package:flutter_main/widgets/record_page/record_card_multiple.dart';
 import 'package:flutter_main/widgets/shadow_box.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -26,13 +27,6 @@ class _RecordPageState extends State<RecordPage> {
   DateTime startDate = DateTime.now().subtract(Duration(days: 31));
   DateTime endDate = DateTime.now().add(Duration(days: 7));
 
-  // List<Color> colorArr = [
-  //     Color(0xFFFF8383),
-  //     Color(0xFFFFC193),
-  //     Color(0xFFFFEDCE),
-  //     Color(0xFFCFECF3),
-  //     Color(0xFFDAF9DE),
-  //   ];
   @override
   void initState() {
     // TODO: implement initState
@@ -204,40 +198,11 @@ class _RecordPageState extends State<RecordPage> {
                   if (selectedQuestion != null &&
                       selectedQuestion!.answers != [])
                     for (var entry in selectedQuestion!.answers.asMap().entries)
-                      Container(
-                        //이게 타겟이랑 횟수 카드
-                        alignment: Alignment.topCenter,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          // color: ColorArr[entry.key % selectedQuestion!.answers!.length],
-                          border: Border.all(
-                            color: Color(0xFF5B8DEF),
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(16)),
-                        ),
-                        child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(entry.value),
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                alignment:
-                                    Alignment.center, // 3. 0회 글자: 남은 공간의 정중앙
-                                child: Text(
-                                  "${dateAnswerCounts(selectedQuestion!, startDate, endDate)} 회",
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      RecordMultipleCard(
+                        selectedQuestion: selectedQuestion!, 
+                        entry: entry, 
+                        startDate: startDate, 
+                        endDate: endDate),
                   SizedBox(width: 8),
                 ],
               ),

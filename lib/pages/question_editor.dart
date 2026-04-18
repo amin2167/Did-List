@@ -200,6 +200,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                       Expanded(
                         child: ShadowBox(
                           widget: MyTextField(
+                            height: 2,
                             controller: targetController,
                             label: "목표를 입력하세요",
                           ),
