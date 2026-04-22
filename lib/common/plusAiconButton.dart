@@ -16,7 +16,8 @@ class PlusAiconButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Container(
-        
+        height: MediaQuery.of(context).size.height * 0.04,
+        // width: MediaQuery.of(context).size.width * 0.1,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           gradient: LinearGradient(

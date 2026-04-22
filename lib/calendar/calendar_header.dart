@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
-import 'package:flutter_main/pages/question_editor.dart';
+import 'package:flutter_main/features/question/question_editor.dart';
 
-import './calendar_dialog.dart';
-import './date_selector.dart';
-import './plusAiconButton.dart';
+import 'calendar_dialog.dart';
+import '../common/date_selector.dart';
+import '../common/plusAiconButton.dart';
 
 class CalendarHeader extends StatelessWidget {
   final DateTime date;
@@ -28,8 +28,7 @@ class CalendarHeader extends StatelessWidget {
         onDateChanged(selectedDate);
       },
       headerBuilder: (context, data) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        return SizedBox(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -54,8 +53,8 @@ class CalendarHeader extends StatelessWidget {
       },
 
       dayProps: EasyDayProps(
-        height: MediaQuery.of(context).size.height * 0.08,
-        // width: MediaQuery.of(context).size.width / 5.5,
+        height: MediaQuery.of(context).size.height * 0.07,
+        width: MediaQuery.of(context).size.width * 0.15,
         dayStructure: DayStructure.dayStrDayNum,
         // inactiveDayStyle: DayStyle(
         //   decoration: BoxDecoration( 

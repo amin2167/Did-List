@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/question.dart';
+import '../../../models/question.dart';
 
 class RecordMultipleCard extends StatefulWidget {
 

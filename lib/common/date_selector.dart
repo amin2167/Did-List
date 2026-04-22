@@ -15,10 +15,10 @@ class DateSelector extends StatelessWidget {
       children: [
         Text(
           DateFormat('yyyy년 MM월 dd일').format(now),
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 133, 123, 123)),
         ),
-        SizedBox(width: 6),
-        Icon(Icons.keyboard_arrow_down, size: 20),
+        SizedBox(width: 4),
+        Icon(Icons.keyboard_arrow_down, size: 20, color: const Color.fromARGB(255, 133, 123, 123)),
       ],
     );
   }

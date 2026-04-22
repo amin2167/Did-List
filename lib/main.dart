@@ -26,6 +26,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:hive_flutter/hive_flutter.dart';
  
+
 import 'models/question.dart';
 import 'providers/question_edit_provider.dart';
 import 'providers/question_list_provider.dart';
@@ -47,7 +48,7 @@ void main() async {
           ChangeNotifierProvider(create: (_) => questionListProvider),
           ChangeNotifierProvider(create: (_) => QuestionEditProvider()),
         ],
-        child: const MyApp(),
+        child: MyApp(),
       ),
     ),
   );

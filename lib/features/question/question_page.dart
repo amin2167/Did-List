@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_main/widgets/gradient_circle.dart';
+import 'package:flutter_main/common/gradient_circle.dart';
 import 'package:provider/provider.dart';
 
-import '../core/layout/base_page.dart';
+import '../../core/layout/base_page.dart';
 import 'question_editor.dart';
-import '../models/question.dart';
-import '../providers/question_list_provider.dart';
-import '../widgets/text_box.dart';
-import '../widgets/plusAiconButton.dart';
+import '../../models/question.dart';
+import '../../providers/question_list_provider.dart';
+import '../../common/text_box.dart';
+import '../../common/plusAiconButton.dart';
 
 class QuestionPage extends StatelessWidget {
   const QuestionPage({super.key});
@@ -17,9 +17,8 @@ class QuestionPage extends StatelessWidget {
     final provider = context.watch<QuestionListProvider>();
     final List<String> weekDayLabels = ['월', '화', '수', '목', '금', '토', '일'];
     //페이지 메인
-    return BasePage(
-      title: '설정',
-      //가장 위에 부모 컬럼
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -31,7 +30,7 @@ class QuestionPage extends StatelessWidget {
               PlusAiconButton(page: AddQuestionPage(), label: '새 목표'),
             ],
           ),
-
+      
           SizedBox(height: 4),
           // 내용 영역
           Expanded(
@@ -68,13 +67,13 @@ class QuestionPage extends StatelessWidget {
                               ),
                               borderRadius: BorderRadius.circular(12),
                             ),
-
+      
                             child: Padding(
                               padding: const EdgeInsets.all(12),
                               //상단 목표
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-
+      
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.only(top: 4),
@@ -83,7 +82,7 @@ class QuestionPage extends StatelessWidget {
                                     ),
                                   ),
                                   SizedBox(width: 16),
-
+      
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -145,12 +144,12 @@ class QuestionPage extends StatelessWidget {
                                                                 .deleteQuestion(
                                                                   entry.value,
                                                                 );
-
+      
                                                             // 3. 다이얼로그 닫기
                                                             Navigator.pop(
                                                               dialogContext,
                                                             );
-
+      
                                                             // 4. 삭제 완료 피드백 (스낵바)
                                                             ScaffoldMessenger.of(
                                                               context,
@@ -185,7 +184,7 @@ class QuestionPage extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-
+      
                                         Row(
                                           children: [
                                             Transform.translate(
@@ -203,7 +202,7 @@ class QuestionPage extends StatelessWidget {
                                                 padding: const EdgeInsets.only(
                                                   right: 4,
                                                 ),
-
+      
                                                 child: GradientCircle(
                                                   text:
                                                       weekDayLabels[i.weekday-1],
@@ -213,7 +212,7 @@ class QuestionPage extends StatelessWidget {
                                               ),
                                           ],
                                         ),
-
+      
                                         if (entry.value.answerType ==
                                                 AnswerType.multipleChoice &&
                                             entry.value.answers != [])

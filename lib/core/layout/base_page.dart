@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_main/pages/record_page.dart';
-import '../../pages/home.dart';
-import '../../pages/question_page.dart';
+import 'package:flutter_main/features/record/record_page.dart';
+import '../../features/home/home.dart';
+import '../../features/question/question_page.dart';
 
 class BasePage extends StatelessWidget {
   final Widget child;

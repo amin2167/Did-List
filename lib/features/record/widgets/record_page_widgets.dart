@@ -1,7 +1,7 @@
 // widgets/common_widgets.dart
 
 import 'package:flutter/material.dart';
-import '../shadow_box.dart';
+import '../../../common/shadow_box.dart';
 
 class RoundedBox extends StatelessWidget {
   final Widget child;

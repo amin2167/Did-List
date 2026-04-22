@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-import '../calendar_header.dart';
-import '../../core/layout/base_page.dart';
-import '../../models/question.dart';
-import '../../providers/question_list_provider.dart';
-import '../complete_button.dart';
-import '../my_text_field.dart';
+import '../../../calendar/calendar_header.dart';
+import '../../../core/layout/base_page.dart';
+import '../../../models/question.dart';
+import '../../../providers/question_list_provider.dart';
+import '../../../common/complete_button.dart';
+import '../../../common/my_text_field.dart';
 
 class GoalCard extends StatefulWidget {
   GoalCard({
