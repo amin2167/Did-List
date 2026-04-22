@@ -20,15 +20,16 @@ class TextBox extends StatelessWidget {
       width: 50,
       height: 20,
       decoration: BoxDecoration(
-        color: Colors.green.shade50,
+      color: Color.fromARGB(255, 220, 216, 245),
         borderRadius: BorderRadius.circular(6),
       ),
+      
       child: Center(
         child: Text(
           condition ? '객관식' : '주관식',
           style: TextStyle(
             fontSize: 12,
-            color: const Color.fromARGB(255, 119, 76, 197),
+            color: const Color.fromARGB(255, 76, 76, 197),
             fontWeight: FontWeight.w600,
           ),
         ),

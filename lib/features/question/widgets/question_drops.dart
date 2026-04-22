@@ -12,12 +12,22 @@ class QuestionDrops extends StatefulWidget {
     required this.selectedDates,
   });
 
+  
+  
   @override
   State<QuestionDrops> createState() => _QuestionDropsState();
 }
 
 class _QuestionDropsState extends State<QuestionDrops> {
+  late List<int> _selectedDayIdx; 
 
+  @override
+  void initState() {
+    super.initState();
+    _selectedDayIdx = widget.selectedDayIdx.isEmpty
+        ? [0, 1, 2, 3, 4, 5, 6]
+        : List.from(widget.selectedDayIdx);
+  }
   DateTime changeDate(int diff) {
     final now = DateTime.now();
     DateTime monday = now.subtract(Duration(days: now.weekday - 1));
@@ -27,7 +37,7 @@ class _QuestionDropsState extends State<QuestionDrops> {
 
   @override
   Widget build(BuildContext context) {
-    Set<DateTime> changedDates = {}; 
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       
@@ -45,8 +55,8 @@ class _QuestionDropsState extends State<QuestionDrops> {
               }
             });
           },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200), //
+          child: Container(
+            // duration: const Duration(milliseconds: 200), //
             width: MediaQuery.of(context).size.width * 0.11,
             height: 50,
             decoration: BoxDecoration(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_main/common/gradient_circle.dart';
 import 'package:provider/provider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../core/layout/base_page.dart';
 import 'question_editor.dart';
 import '../../models/question.dart';
 import '../../providers/question_list_provider.dart';
@@ -18,27 +18,47 @@ class QuestionPage extends StatelessWidget {
     final List<String> weekDayLabels = ['월', '화', '수', '목', '금', '토', '일'];
     //페이지 메인
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(vertical: 13.0, horizontal: 16.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 상단 영역 (제목 + 버튼)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(width: 40), // 좌측 균형용
-              PlusAiconButton(page: AddQuestionPage(), label: '새 목표'),
-            ],
+          Center(
+            child: const Text(
+              "리스트",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
           ),
-      
+
+          // 2. 우측에 위치할 버튼
+          Align(
+            alignment: Alignment.centerRight,
+            child: PlusAiconButton(page: AddQuestionPage(), label: '새 목표'),
+          ),
+
           SizedBox(height: 4),
           // 내용 영역
           Expanded(
             child: provider.savedQuestions.isEmpty
                 ? Center(
-                    child: Text(
-                      '아직 추가된 목표가 없습니다.',
-                      textAlign: TextAlign.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFEEEEF8), // 연보라 배경
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Icon(
+                            Icons.track_changes, // 동심원 모양
+                            size: 44,
+                            color: Color(0xFF5B4FCF), // 보라색
+                          ),
+                        ),
+                        Text('아직 추가된 목표가 없습니다.', textAlign: TextAlign.center),
+                      ],
                     ),
                   )
                 : ListView(
@@ -59,7 +79,7 @@ class QuestionPage extends StatelessWidget {
                             // 중요: 자식 위젯(InkWell)의 효과가 카드 모서리에 맞춰 잘리도록 설정
                             clipBehavior: Clip.antiAlias,
                             elevation: 1,
-                            margin: const EdgeInsets.symmetric(vertical: 12),
+
                             shape: RoundedRectangleBorder(
                               side: BorderSide(
                                 color: Colors.grey.shade300, // 테두리 색
@@ -67,22 +87,38 @@ class QuestionPage extends StatelessWidget {
                               ),
                               borderRadius: BorderRadius.circular(12),
                             ),
-      
+
                             child: Padding(
                               padding: const EdgeInsets.all(12),
                               //상단 목표
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-      
+
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.only(top: 4),
-                                    child: GradientCircle(
-                                      text: '${entry.key + 1}',
+                                    child: Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Color(0xFF5B8DEF), // 파랑
+                                            Color(0xFF8E5CF6), // 보라
+                                          ],
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          '${entry.key + 1}',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   SizedBox(width: 16),
-      
+
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -100,8 +136,9 @@ class QuestionPage extends StatelessWidget {
                                               constraints:
                                                   const BoxConstraints(),
                                               icon: const Icon(
-                                                Icons.delete_forever_sharp,
+                                                FontAwesomeIcons.trashCan,
                                                 color: Colors.red,
+                                                size: 20,
                                               ),
                                               onPressed: () {
                                                 // 1. 다이얼로그 띄우기
@@ -144,12 +181,12 @@ class QuestionPage extends StatelessWidget {
                                                                 .deleteQuestion(
                                                                   entry.value,
                                                                 );
-      
+
                                                             // 3. 다이얼로그 닫기
                                                             Navigator.pop(
                                                               dialogContext,
                                                             );
-      
+
                                                             // 4. 삭제 완료 피드백 (스낵바)
                                                             ScaffoldMessenger.of(
                                                               context,
@@ -184,7 +221,7 @@ class QuestionPage extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-      
+
                                         Row(
                                           children: [
                                             Transform.translate(
@@ -202,17 +239,18 @@ class QuestionPage extends StatelessWidget {
                                                 padding: const EdgeInsets.only(
                                                   right: 4,
                                                 ),
-      
+
                                                 child: GradientCircle(
                                                   text:
-                                                      weekDayLabels[i.weekday-1],
+                                                      weekDayLabels[i.weekday -
+                                                          1],
                                                   size: 20,
                                                   fontSize: 12,
                                                 ),
                                               ),
                                           ],
                                         ),
-      
+
                                         if (entry.value.answerType ==
                                                 AnswerType.multipleChoice &&
                                             entry.value.answers != [])

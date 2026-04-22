@@ -65,8 +65,10 @@ class _MyHomePageState extends State<MyHomePage> {
     final provider = context.watch<QuestionListProvider>();
 
     return Column(
+      
       children: [
         Material(
+          color: Color(0xFFF0EEFF),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(

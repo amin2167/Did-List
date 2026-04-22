@@ -19,19 +19,15 @@ class GradientCircle extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: LinearGradient(
-          colors: [
-            Color(0xFF5B8DEF),
-            Color(0xFF8E5CF6),
-          ],
-        ),
+        color: Color.fromARGB(255, 220, 216, 245),
       ),
       child: Center(
         child: Text(
           text,
           style: TextStyle(
-            fontSize: fontSize,
-            color: Colors.white,
+            fontSize: 12,
+            color: const Color.fromARGB(255, 76, 76, 197),
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
