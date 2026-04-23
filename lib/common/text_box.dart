@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class TextBox extends StatelessWidget {
   final bool condition;
   final String label_1; 
-  final String? label_2;
+  final String label_2;
 
   const TextBox({
     super.key,
     required this.label_1,
-    this.label_2,
+    required this.label_2,
     this.condition = true,
    });
 
@@ -26,7 +26,7 @@ class TextBox extends StatelessWidget {
       
       child: Center(
         child: Text(
-          condition ? '객관식' : '주관식',
+          condition ? label_1 : label_2,
           style: TextStyle(
             fontSize: 12,
             color: const Color.fromARGB(255, 76, 76, 197),

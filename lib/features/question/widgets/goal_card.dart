@@ -95,7 +95,7 @@ class _GoalCard extends State<GoalCard> {
                         Icons.task_alt,
                         color: const Color.fromARGB(255, 6, 182, 12),
                       )
-                    : Icon(Icons.task_alt),
+                    : Icon(Icons.task_alt, color: Colors.grey,),
               ],
             ),
             Column(

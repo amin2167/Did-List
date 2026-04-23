@@ -12,6 +12,7 @@ import 'widgets/answer_text_field.dart';
 import 'widgets/build_type_button.dart';
 import 'widgets/calendar_dialog_editing.dart';
 import 'widgets/question_drops.dart';
+import './widgets/build_answer_tile.dart';
 
 class AddQuestionPage extends StatefulWidget {
   const AddQuestionPage({super.key, this.nowQuestion});
@@ -28,7 +29,6 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     2,
     (_) => TextEditingController(),
   );
-
   late DateTime now;
 
   TextEditingController dateController = TextEditingController();
@@ -37,6 +37,19 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
   List<int> selectedDayIdx = [];
   Set<DateTime> selectedDays = {};
   final List<String> weekDayLabels = ['월', '화', '수', '목', '금', '토', '일'];
+
+  void _removeOption(int idx) {
+    setState(() {
+      optionControllers[idx].dispose();
+      optionControllers.removeAt(idx);
+    });
+  }
+
+  void _addOption() {
+    setState(() {
+      optionControllers.add(TextEditingController());
+    });
+  }
 
   @override
   void initState() {
@@ -122,15 +135,39 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
 
     providerList.addQuestion(q);
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('저장되었습니다!')));
+    // ScaffoldMessenger.of(
+    //   context,
+    // ).showSnackBar(SnackBar(content: Text('저장되었습니다!')));
     Navigator.pop(context);
   }
 
   void modify() {
     final provider = context.read<QuestionListProvider>();
     final providerEdit = context.read<QuestionEditProvider>();
+
+    // 유효성 검사
+    if (targetController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('목표를 입력해주세요!')));
+      return;
+    }
+
+    if (providerEdit.answerType == AnswerType.multipleChoice) {
+      if (optionControllers.any((c) => c.text.trim().isEmpty)) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('모든 선지를 입력해주세요!')));
+        return;
+      }
+    }
+
+    if (selectedDayIdx.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('요일을 하나 이상 선택해주세요!')));
+      return;
+    }
 
     Question q = widget.nowQuestion!;
 
@@ -145,19 +182,6 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     );
 
     Navigator.pop(context);
-  }
-
-  void _addOption() {
-    setState(() {
-      optionControllers.add(TextEditingController());
-    });
-  }
-
-  void _removeOption(int idx) {
-    setState(() {
-      optionControllers[idx].dispose();
-      optionControllers.removeAt(idx);
-    });
   }
 
   //현제 날짜 리턴하는 함수
@@ -190,6 +214,13 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                         selectedDates: selectedDays,
                         selectedDayIdx: selectedDayIdx,
                         weekDayLabels: weekDayLabels,
+                        onChanged: (dayIdx, days) {
+                          setState(() {
+                            selectedDayIdx = dayIdx;
+                            selectedDays = days;
+                            selectedDayIdx.sort();
+                          });
+                        },
                       ),
                     ),
                     Padding(
@@ -238,7 +269,12 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
 
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: _buildAnswerTile(provider), // 👈 여기서 분기!
+                      child: BuildAnswerTile(
+                        provider: provider,
+                        optionControllers: optionControllers,
+                        onAddOption: _addOption,
+                        onRemoveOption: _removeOption,
+                      ),
                     ),
 
                     Padding(
@@ -316,87 +352,5 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
         ),
       ),
     );
-  }
-
-  // 👇 객관식/주관식 분기
-  Widget _buildAnswerTile(QuestionEditProvider provider) {
-    if (provider.answerType == AnswerType.multipleChoice) {
-      // 객관식
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Text('선지'),
-          ),
-          for (int i = 0; i < optionControllers.length; i++)
-            Row(
-              children: [
-                AnswerTextField(
-                  label: '선지${i + 1}',
-                  controller: optionControllers[i],
-                ),
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFE8F5E9),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(Icons.check, color: Color(0xFF4CAF50), size: 20),
-                ),
-                SizedBox(width: 8),
-                // 삭제 아이콘
-                GestureDetector(
-                  onTap: () => _removeOption(i),
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFFFEBEE),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(
-                      FontAwesomeIcons.trashCan,
-                      color: Color(0xFFE53935),
-                      size: 20,
-                    ),
-                  ),
-                ),
-                // Padding(
-                //   padding: const EdgeInsets.all(8.0),
-                //   child: Icon(
-                //     Icons.task_alt,
-                //     color:
-                //         (widget.nowQuestion?.selectedOptions.contains(i) ??
-                //             false)
-                //         ? Colors.green
-                //         : Colors.grey,
-                //   ),
-                // ),
-                // IconButton(
-                //   onPressed: () => _removeOption(i),
-                //   icon: Icon(
-                //     FontAwesomeIcons.trashCan,
-                //     color: Colors.red,
-                //     size: 21,
-                //   ),
-                // ),
-              ],
-            ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: TextButton.icon(
-              onPressed: _addOption,
-              icon: Icon(Icons.add),
-              label: Text('선지 추가'),
-            ),
-          ),
-        ],
-      );
-    } else {
-      //주관식
-      return SizedBox();
-    }
   }
 }

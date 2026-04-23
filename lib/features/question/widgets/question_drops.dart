@@ -4,12 +4,14 @@ class QuestionDrops extends StatefulWidget {
   final List<int> selectedDayIdx;
   final List<String> weekDayLabels;
   Set<DateTime> selectedDates;
+  final Function(List<int>, Set<DateTime>) onChanged;
 
   QuestionDrops({
     super.key,
     required this.selectedDayIdx,
     required this.weekDayLabels,
     required this.selectedDates,
+    required this.onChanged,
   });
 
   
@@ -20,13 +22,16 @@ class QuestionDrops extends StatefulWidget {
 
 class _QuestionDropsState extends State<QuestionDrops> {
   late List<int> _selectedDayIdx; 
+  late Set<DateTime> _selectedDates;
 
   @override
   void initState() {
     super.initState();
     _selectedDayIdx = widget.selectedDayIdx.isEmpty
-        ? [0, 1, 2, 3, 4, 5, 6]
-        : List.from(widget.selectedDayIdx);
+      ? [0, 1, 2, 3, 4, 5, 6]
+      : List.from(widget.selectedDayIdx);
+
+    _selectedDates = Set.from(widget.selectedDates);
   }
   DateTime changeDate(int diff) {
     final now = DateTime.now();
@@ -42,17 +47,19 @@ class _QuestionDropsState extends State<QuestionDrops> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       
       children: List.generate(7, (index) {
-        bool isSelected = widget.selectedDayIdx.contains(index);
+        final bool isSelected = _selectedDayIdx.contains(index);
         return GestureDetector(
           onTap: () {
             setState(() {
-              if (isSelected) {
-                widget.selectedDayIdx.remove(index);
-                widget.selectedDates.remove(changeDate(index));
+              final isNowSelected = _selectedDayIdx.contains(index);
+              if (isNowSelected) {
+                _selectedDayIdx.remove(index);
+                _selectedDates.remove(changeDate(index));
               } else {
-                widget.selectedDayIdx.add(index);
-                widget.selectedDates.add(changeDate(index));
+                _selectedDayIdx.add(index);
+                _selectedDates.add(changeDate(index));
               }
+              widget.onChanged(_selectedDayIdx, _selectedDates);
             });
           },
           child: Container(
