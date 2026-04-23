@@ -61,103 +61,102 @@ class _RecordPageState extends State<RecordPage> {
             ),
           ),
           // 스크롤 영역
-          SingleChildScrollView(
-            // padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16),
-
-                // 기간 선택 카드
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05), // 아주 연한 그림자
-                        blurRadius: 10,
-                        offset: const Offset(0, 2), // 아래쪽으로 살짝 내려온 그림자
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+          
+              // 기간 선택 카드
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade50,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05), // 아주 연한 그림자
+                      blurRadius: 10,
+                      offset: const Offset(0, 2), // 아래쪽으로 살짝 내려온 그림자
+                    ),
+                  ],
+                ),
+          
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        '기간 선택',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 139, 133, 133),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+          
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Builder(
+                              builder: (context) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    CalendarDialog.show(
+                                      context,
+                                      selectedDay: startDate,
+                                      onDaySelected: (pickedDate) {
+                                        setState(() {
+                                          startDate = pickedDate;
+                                          print('startDate: ${startDate}');
+                                        });
+                                      },
+                                    );
+                                  },
+                                  child: DateRow(
+                                    date: DateFormat(
+                                      'yyyy-MM-dd',
+                                    ).format(startDate),
+                                    label: '',
+                                  ),
+                                );
+                              }
+                            ),
+                          ),
+                          Center(child: Text("~  ")),
+                          Expanded(
+                            child: Builder(
+                              builder: (context) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    CalendarDialog.show(
+                                      context,
+                                      selectedDay: endDate,
+                                      onDaySelected: (pickedDate) {
+                                        setState(() {
+                                          endDate = pickedDate;
+                                        });
+                                      },
+                                    );
+                                  },
+                                  child: DateRow(
+                                    date: DateFormat(
+                                      'yyyy-MM-dd',
+                                    ).format(endDate),
+                                    label: '',
+                                  ),
+                                );
+                              }
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          '기간 선택',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 139, 133, 133),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Builder(
-                                builder: (context) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      CalendarDialog.show(
-                                        context,
-                                        selectedDay: startDate,
-                                        onDaySelected: (pickedDate) {
-                                          setState(() {
-                                            startDate = pickedDate;
-                                          });
-                                        },
-                                      );
-                                    },
-                                    child: DateRow(
-                                      date: DateFormat(
-                                        'yyyy-MM-dd',
-                                      ).format(startDate),
-                                      label: '',
-                                    ),
-                                  );
-                                }
-                              ),
-                            ),
-                            Center(child: Text("~  ")),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  CalendarDialog.show(
-                                    context,
-                                    selectedDay: endDate,
-                                    onDaySelected: (pickedDate) {
-                                      setState(() {
-                                        endDate = pickedDate;
-                                      });
-                                    },
-                                  );
-                                },
-                                child: DateRow(
-                                  date: DateFormat(
-                                    'yyyy-MM-dd',
-                                  ).format(endDate),
-                                  label: '',
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        //const SizedBox(height: 8),
-                      ],
-                    ),
-                  ),
                 ),
-
-                const SizedBox(height: 16),
-              ],
-            ),
+              ),
+              const SizedBox(height: 16),
+            ],
           ),
           Expanded(
             child: GridView.count(

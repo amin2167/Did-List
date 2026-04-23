@@ -58,7 +58,8 @@ class CalendarDialog {
                     ),
                   ),
                   calendarStyle: CalendarStyle(
-                    cellMargin: const EdgeInsets.all(8),
+                    
+                    cellMargin: const EdgeInsets.all(4),
                     defaultTextStyle: const TextStyle(
                       fontSize: 12, // 👈 날짜 텍스트
                       color: Color(0xFF4A4A4A),
