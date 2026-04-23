@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -11,92 +10,92 @@ class CalendarDialog {
     required DateTime selectedDay,
     required Function(DateTime) onDaySelected,
   }) {
-    showDialog(
+    final RenderBox renderBox = context.findRenderObject() as RenderBox;
+    final offset = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
+
+    showMenu(
       context: context,
-      builder: (context) {
-        DateTime _selected = selectedDay;
-        return StatefulBuilder(
-          builder: (context, setDialogState) => Dialog(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              constraints: const BoxConstraints(maxHeight: 480),
-              child: TableCalendar(
-                locale: 'ko_KR',
-                firstDay: DateTime(2000),
-                lastDay: DateTime(2100),
-                focusedDay: _selected,
-                selectedDayPredicate: (day) => isSameDay(day, _selected),
-                onDaySelected: (selected, focused) {
-                  setDialogState(() {
-                    _selected = selected;
-                  });
-                  onDaySelected(selected);
-                  Navigator.pop(context);
-                },
-                headerStyle: HeaderStyle(
-                  formatButtonVisible: false,
-                  titleCentered: true,
-                  titleTextStyle: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF333333),
-                  ),
-                  leftChevronIcon: const Icon(
-                    Icons.chevron_left,
-                    color: Colors.grey,
-                    size: 28,
-                  ),
-                  rightChevronIcon: const Icon(
-                    Icons.chevron_right,
-                    color: Colors.grey,
-                    size: 28,
-                  ),
-                  headerPadding: const EdgeInsets.symmetric(vertical: 8.0),
-                ),
-                daysOfWeekStyle: const DaysOfWeekStyle(
-                  weekdayStyle: TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  weekendStyle: TextStyle(
-                    color: Colors.redAccent,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                calendarStyle: CalendarStyle(
-                  todayDecoration: BoxDecoration(
-                    color: Colors.transparent,
-                    border: Border.all(
-                      color: const Color(0xFF8E5CF6),
-                      width: 1.5,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      position: RelativeRect.fromLTRB(
+        offset.dx, // 왼쪽 기준
+        offset.dy + size.height, // 위젯 바로 아래
+        offset.dx + size.width,
+        0,
+      ),
+      items: [
+        PopupMenuItem(
+          padding: EdgeInsets.zero,
+          child: SizedBox(
+            width: 220,
+            child: StatefulBuilder(
+              builder: (context, setDialogState) {
+                DateTime _selected = selectedDay;
+                return TableCalendar(
+                  rowHeight: 36, // 👈 기본값 52 → 줄이기
+                  daysOfWeekHeight: 24,
+                  headerStyle: HeaderStyle(
+                    formatButtonVisible: false,
+                    titleCentered: true,
+                    headerPadding: const EdgeInsets.symmetric(vertical: 4),
+                    titleTextStyle: const TextStyle(
+                      fontSize: 13, // 👈 헤더 월 텍스트
+                      fontWeight: FontWeight.w700,
                     ),
-                    shape: BoxShape.circle,
+                    // ...
                   ),
-                  todayTextStyle: const TextStyle(
-                    color: Color(0xFF8E5CF6),
-                    fontWeight: FontWeight.bold,
+                  daysOfWeekStyle: const DaysOfWeekStyle(
+                    weekdayStyle: TextStyle(
+                      fontSize: 12, // 👈 요일 텍스트
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    weekendStyle: TextStyle(
+                      fontSize: 12, // 👈 요일 텍스트
+                      color: Colors.redAccent,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                  defaultTextStyle: const TextStyle(
-                    color: Color(0xFF4A4A4A),
-                    fontWeight: FontWeight.w500,
+                  calendarStyle: CalendarStyle(
+                    cellMargin: const EdgeInsets.all(8),
+                    defaultTextStyle: const TextStyle(
+                      fontSize: 12, // 👈 날짜 텍스트
+                      color: Color(0xFF4A4A4A),
+                    ),
+                    weekendTextStyle: const TextStyle(
+                      fontSize: 12, // 👈 날짜 텍스트
+                      color: Colors.redAccent,
+                    ),
+                    todayTextStyle: const TextStyle(
+                      fontSize: 12, // 👈 오늘 날짜 텍스트
+                      color: Color(0xFF8E5CF6),
+                    ),
+                    selectedTextStyle: const TextStyle(
+                      fontSize: 12, // 👈 선택된 날짜 텍스트
+                      color: Colors.white,
+                    ),
+                    outsideTextStyle: const TextStyle(
+                      fontSize: 12, // 👈 바깥 날짜 텍스트
+                    ),
                   ),
-                  weekendTextStyle: const TextStyle(color: Colors.redAccent),
-                  outsideDaysVisible: false,
-                  selectedTextStyle: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+                  locale: 'ko_KR',
+                  firstDay: DateTime(2000),
+                  lastDay: DateTime(2100),
+                  focusedDay: _selected,
+                  selectedDayPredicate: (day) => isSameDay(day, _selected),
+                  onDaySelected: (selected, focused) {
+                    setDialogState(() => _selected = selected);
+                    onDaySelected(selected);
+                    Navigator.pop(context);
+                  },
+                  // ... 기존 스타일 그대로
+                );
+              },
             ),
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 }

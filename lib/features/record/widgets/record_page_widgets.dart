@@ -10,12 +10,9 @@ class RoundedBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: Color(0xFF5B8DEF),
-        ),
-        color: const Color(0xFFEEF2FF),
+        color: Color(0xFFF0EEFF),
         borderRadius: BorderRadius.circular(12),
       ),
       child: child,
@@ -40,12 +37,13 @@ class DateRow extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(date),
-                const Icon(Icons.calendar_today_outlined, size: 16, color: Colors.grey),
+                Icon(Icons.keyboard_arrow_down, size: 20, color: const Color.fromARGB(255, 133, 123, 123)),
+                // const Icon(Icons.calendar_today_outlined, size: 16, color: Colors.grey),
               ],
             ),
           ),
         ),
-        const SizedBox(width: 8),
+       
         Text(label, style: const TextStyle(color: Colors.grey)),
       ],
     );

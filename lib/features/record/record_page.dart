@@ -54,133 +54,107 @@ class _RecordPageState extends State<RecordPage> {
     return SafeArea(
       child: Column(
         children: [
+          Center(
+            child: const Text(
+              "기록",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
           // 스크롤 영역
           SingleChildScrollView(
             // padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 목표 선택 카드
-                ShadowBox(
-                  widget: Padding(
+                const SizedBox(height: 16),
+
+                // 기간 선택 카드
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05), // 아주 연한 그림자
+                        blurRadius: 10,
+                        offset: const Offset(0, 2), // 아래쪽으로 살짝 내려온 그림자
+                      ),
+                    ],
+                  ),
+
+                  child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 8),
-                        DropdownMenu<int>(
-                          requestFocusOnTap: true,
-                          width: double.infinity,
-                          label: const Text("목표선택"),
-                          hintText: "목표를 선택해주세요",
-                          inputDecorationTheme: InputDecorationTheme(
-                            filled: true,
-                            fillColor: Colors.grey.shade50,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(
-                                color: Color(0xFF5B8DEF),
-                                width: 2,
+                        const Text(
+                          '기간 선택',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 139, 133, 133),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Builder(
+                                builder: (context) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      CalendarDialog.show(
+                                        context,
+                                        selectedDay: startDate,
+                                        onDaySelected: (pickedDate) {
+                                          setState(() {
+                                            startDate = pickedDate;
+                                          });
+                                        },
+                                      );
+                                    },
+                                    child: DateRow(
+                                      date: DateFormat(
+                                        'yyyy-MM-dd',
+                                      ).format(startDate),
+                                      label: '',
+                                    ),
+                                  );
+                                }
                               ),
                             ),
-                          ),
-                          trailingIcon: const Icon(Icons.keyboard_arrow_down),
-                          dropdownMenuEntries: [
-                            for (var entry
-                                in provider.savedQuestions.asMap().entries)
-                              DropdownMenuEntry(
-                                value: entry.key,
-                                label: entry.value.target,
-                                leadingIcon: const Padding(
-                                  padding: EdgeInsets.only(left: 16.0),
-                                  child: Icon(Icons.assignment_outlined),
+                            Center(child: Text("~  ")),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  CalendarDialog.show(
+                                    context,
+                                    selectedDay: endDate,
+                                    onDaySelected: (pickedDate) {
+                                      setState(() {
+                                        endDate = pickedDate;
+                                      });
+                                    },
+                                  );
+                                },
+                                child: DateRow(
+                                  date: DateFormat(
+                                    'yyyy-MM-dd',
+                                  ).format(endDate),
+                                  label: '',
                                 ),
                               ),
+                            ),
                           ],
-                          onSelected: (int? value) {
-                            setState(() {
-                              if (value != null) {
-                                selectedQuestion =
-                                    provider.savedQuestions[value];
-                                if (selectedQuestion!.answersCounts.isEmpty) {
-                                  selectedQuestion!.answersCounts =
-                                      List.filled(
-                                        selectedQuestion!.answers.length,
-                                        0,
-                                      );
-                                }
-                              }
-                            });
-                          },
                         ),
+
+                        //const SizedBox(height: 8),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
-    
-                // 기간 선택 카드
-                ShadowBox(
-                  widget: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Container(
-                      decoration: BoxDecoration(color: Colors.grey.shade50),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            '기간 선택',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 13,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          GestureDetector(
-                            onTap: () {
-                              CalendarDialog.show(
-                                context,
-                                selectedDay: startDate,
-                                onDaySelected: (pickedDate) {
-                                  setState(() {
-                                    startDate = pickedDate;
-                                  });
-                                },
-                              );
-                            },
-                            child: DateRow(
-                              date: DateFormat(
-                                'yyyy-MM-dd',
-                              ).format(startDate),
-                              label: '부터',
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          GestureDetector(
-                            onTap: () {
-                              CalendarDialog.show(
-                                context,
-                                selectedDay: endDate,
-                                onDaySelected: (pickedDate) {
-                                  setState(() {
-                                    endDate = pickedDate;
-                                  });
-                                },
-                              );
-                            },
-                            child: DateRow(
-                              date: DateFormat('yyyy-MM-dd').format(endDate),
-                              label: '까지',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+
                 const SizedBox(height: 16),
               ],
             ),
@@ -190,17 +164,17 @@ class _RecordPageState extends State<RecordPage> {
               mainAxisSpacing: 6, // 세로 아이템 간 간격 제거
               crossAxisSpacing: 6, // 가로 아이템 간 간격 제거
               crossAxisCount: 3,
-    
+
               padding: EdgeInsets.zero,
               children: [
-                if (selectedQuestion != null &&
-                    selectedQuestion!.answers != [])
+                if (selectedQuestion != null && selectedQuestion!.answers != [])
                   for (var entry in selectedQuestion!.answers.asMap().entries)
                     RecordMultipleCard(
-                      selectedQuestion: selectedQuestion!, 
-                      entry: entry, 
-                      startDate: startDate, 
-                      endDate: endDate),
+                      selectedQuestion: selectedQuestion!,
+                      entry: entry,
+                      startDate: startDate,
+                      endDate: endDate,
+                    ),
                 SizedBox(width: 8),
               ],
             ),
