@@ -9,7 +9,7 @@ import '../../models/question.dart';
 import '../../providers/question_list_provider.dart';
 import '../../common/complete_button.dart';
 import '../../models/state_week.dart';
-import '../question/widgets/goal_card.dart';
+import 'widgets/goal_card.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -65,7 +65,6 @@ class _MyHomePageState extends State<MyHomePage> {
     final provider = context.watch<QuestionListProvider>();
 
     return Column(
-      
       children: [
         Material(
           color: Color(0xFFF0EEFF),
@@ -95,33 +94,33 @@ class _MyHomePageState extends State<MyHomePage> {
         Expanded(
           child: provider.savedQuestions.isEmpty
               ? Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFEEEEF8), // 연보라 배경
-                        borderRadius: BorderRadius.circular(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Color(0xFFEEEEF8), // 연보라 배경
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Icon(
+                          Icons.track_changes, // 동심원 모양
+                          size: 44,
+                          color: Color(0xFF5B4FCF), // 보라색
+                        ),
                       ),
-                      child: Icon(
-                        Icons.track_changes, // 동심원 모양
-                        size: 44,
-                        color: Color(0xFF5B4FCF), // 보라색
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "목표가 없습니다.\n 새 목표를 만들어 주세요.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 15),
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "목표가 없습니다.\n 새 목표를 만들어 주세요.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ),
-                  ],
-                ),
-              )
+                    ],
+                  ),
+                )
               : ListView(
                   children: [
                     for (var entry in provider.savedQuestions.asMap().entries)

@@ -21,16 +21,17 @@ class AnswerTextField extends StatelessWidget {
         child: TextField(
           controller: controller,
           decoration: InputDecoration(
-            labelText: label,
+            filled: true, // 👈 필수
+            fillColor: Colors.white, // 👈 배경색
+            hintText: label,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: Colors.grey, width: 1),
             ),
             focusedBorder: OutlineInputBorder(
-              // ← 이거 추가
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.blue, width: 2),
+              borderSide: BorderSide(color: Color(0xFF5B4FCF), width: 2),
             ),
           ),
         ),

@@ -58,7 +58,14 @@ class CalendarDialog {
                     ),
                   ),
                   calendarStyle: CalendarStyle(
-                    
+                    todayDecoration: BoxDecoration(
+                      color: Colors.transparent, // 👈 배경 투명
+                      shape: BoxShape.circle,
+                    ),
+                    todayTextStyle: const TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF4A4A4A), // 👈 일반 날짜랑 같은 색
+                    ),
                     cellMargin: const EdgeInsets.all(4),
                     defaultTextStyle: const TextStyle(
                       fontSize: 12, // 👈 날짜 텍스트
@@ -67,10 +74,6 @@ class CalendarDialog {
                     weekendTextStyle: const TextStyle(
                       fontSize: 12, // 👈 날짜 텍스트
                       color: Colors.redAccent,
-                    ),
-                    todayTextStyle: const TextStyle(
-                      fontSize: 12, // 👈 오늘 날짜 텍스트
-                      color: Color(0xFF8E5CF6),
                     ),
                     selectedTextStyle: const TextStyle(
                       fontSize: 12, // 👈 선택된 날짜 텍스트

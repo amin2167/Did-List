@@ -27,15 +27,8 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   // toolbarHeight: 40,
-      //   centerTitle: true,
-      //   title: Text(
-      //     _titles[_currentIndex],
-      //     style: const TextStyle(fontWeight: FontWeight.bold),
-      //   ),
-      // ),
       backgroundColor: Color(0xFFF0EEFF),
+      extendBody: true,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),

@@ -34,7 +34,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
   TextEditingController dateController = TextEditingController();
 
   bool isAllweek = true;
-  List<int> selectedDayIdx = [];
+  List<int> selectedDayIdx = [0, 1, 2, 3, 4, 5, 6];
   Set<DateTime> selectedDays = {};
   final List<String> weekDayLabels = ['월', '화', '수', '목', '금', '토', '일'];
 
@@ -197,7 +197,11 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     final provider = context.watch<QuestionEditProvider>();
 
     return Scaffold(
-      appBar: AppBar(title: Center(child: Text('새 목표 설정'))),
+      backgroundColor: Color(0xFFEEEEF8),
+      appBar: AppBar(
+        backgroundColor: Color(0xFFEEEEF8),
+        centerTitle: true,
+        title: Text('새 목표 설정')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

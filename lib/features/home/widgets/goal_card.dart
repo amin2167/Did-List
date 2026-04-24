@@ -40,7 +40,10 @@ class _GoalCard extends State<GoalCard> {
   }
 
   void saveCounts(Question q) {
-    q.answersCounts = List.filled(q.answers.length, 0);
+    while(q.answers.length > q.answersCounts.length) { //totalcount가 안이상해지는 로직
+      q.answersCounts.add(0);
+    }
+    // q.answersCounts = List.filled(q.answers.length, 0);
 
     if (q.selectedOptions.isNotEmpty) {
       for (var k in q.selectedOptions) {
@@ -161,7 +164,6 @@ class _GoalCard extends State<GoalCard> {
                     ),
               ],
             ),
-
             SizedBox(height: 16),
             (!isComplete(widget.entry.value, widget.now))
                 ? CompleteButton(
@@ -192,6 +194,7 @@ class _GoalCard extends State<GoalCard> {
                             ),
                           );
                           saveCounts(q);
+                          q.selectedOptions = []; //완료 버튼 누르면 같은질문의 선지는 다시 선택 해제되게끔
                           q.save(); // Hive 저장
                         }
                       });

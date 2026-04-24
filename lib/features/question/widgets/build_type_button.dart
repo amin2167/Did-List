@@ -25,7 +25,7 @@ class BuildTypeButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           // 1. 선택되었을 때만 파란색 보더 적용
           border: Border.all(
-            color: isSelected ? Colors.blue : Colors.grey.shade300,
+            color: isSelected ? Color(0xFF5B4FCF) : Colors.grey.shade300,
             width: 2.0,
           ),
           // 2. 사진처럼 부드러운 그림자 효과 (선택 시 더 강조)

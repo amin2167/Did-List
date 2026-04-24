@@ -26,11 +26,12 @@ class _RecordPageState extends State<RecordPage> {
   Question? selectedQuestion;
   DateTime startDate = DateTime.now().subtract(Duration(days: 31));
   DateTime endDate = DateTime.now().add(Duration(days: 7));
-
+  late Duration duration;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    duration = endDate.difference(startDate);
   }
 
   int dateAnswerCounts(Question q, DateTime start, DateTime end) {
@@ -70,7 +71,7 @@ class _RecordPageState extends State<RecordPage> {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.grey.shade50,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.05), // 아주 연한 그림자
@@ -159,20 +160,24 @@ class _RecordPageState extends State<RecordPage> {
             ],
           ),
           Expanded(
-            child: GridView.count(
-              mainAxisSpacing: 6, // 세로 아이템 간 간격 제거
-              crossAxisSpacing: 6, // 가로 아이템 간 간격 제거
-              crossAxisCount: 3,
+            child: ListView(
+              // mainAxisSpacing: 6, // 세로 아이템 간 간격 제거
+              // crossAxisSpacing: 6, // 가로 아이템 간 간격 제거
+              // crossAxisCount: 3,
 
               padding: EdgeInsets.zero,
               children: [
-                if (selectedQuestion != null && selectedQuestion!.answers != [])
-                  for (var entry in selectedQuestion!.answers.asMap().entries)
+                // if (provider.savedQuestions != null)
+                  for (var entry in provider.savedQuestions.asMap().entries)
                     RecordMultipleCard(
-                      selectedQuestion: selectedQuestion!,
                       entry: entry,
-                      startDate: startDate,
-                      endDate: endDate,
+                      duration: duration,
+                      // target: entry.value.target,
+                      // completedDates: entry.value.completedDates,
+                      // answersCounts: entry.value.answersCounts,
+                      // answers: entry.value.answers,
+                      // startDate: startDate,
+                      // endDate: endDate,
                     ),
                 SizedBox(width: 8),
               ],

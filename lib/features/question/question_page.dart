@@ -52,8 +52,8 @@ class QuestionPage extends StatelessWidget {
                           width: 80,
                           height: 80,
                           decoration: BoxDecoration(
-                            color: Color(0xFFEEEEF8), // 연보라 배경
-                            borderRadius: BorderRadius.circular(20),
+                            color: Color(0xFFEEEEF8), 
+                            borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
                             Icons.track_changes, // 동심원 모양
