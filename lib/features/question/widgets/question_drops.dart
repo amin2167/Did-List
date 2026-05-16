@@ -65,7 +65,7 @@ class _QuestionDropsState extends State<QuestionDrops> {
           child: Container(
             // duration: const Duration(milliseconds: 200), //
             width: MediaQuery.of(context).size.width * 0.11,
-            height: 50,
+            height: MediaQuery.of(context).size.width * 0.11,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               gradient: isSelected

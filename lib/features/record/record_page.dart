@@ -58,7 +58,7 @@ class _RecordPageState extends State<RecordPage> {
           Center(
             child: const Text(
               "기록",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
           // 스크롤 영역
@@ -82,7 +82,7 @@ class _RecordPageState extends State<RecordPage> {
                 ),
           
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -90,7 +90,7 @@ class _RecordPageState extends State<RecordPage> {
                         '기간 선택',
                         style: TextStyle(
                           color: Color.fromARGB(255, 139, 133, 133),
-                          fontSize: 13,
+                          fontSize: 11,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -156,7 +156,7 @@ class _RecordPageState extends State<RecordPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 4),
             ],
           ),
           Expanded(
@@ -164,20 +164,23 @@ class _RecordPageState extends State<RecordPage> {
               // mainAxisSpacing: 6, // 세로 아이템 간 간격 제거
               // crossAxisSpacing: 6, // 가로 아이템 간 간격 제거
               // crossAxisCount: 3,
-
+      
               padding: EdgeInsets.zero,
               children: [
                 // if (provider.savedQuestions != null)
                   for (var entry in provider.savedQuestions.asMap().entries)
-                    RecordMultipleCard(
-                      entry: entry,
-                      duration: duration,
-                      // target: entry.value.target,
-                      // completedDates: entry.value.completedDates,
-                      // answersCounts: entry.value.answersCounts,
-                      // answers: entry.value.answers,
-                      // startDate: startDate,
-                      // endDate: endDate,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: RecordMultipleCard(
+                        entry: entry,
+                        duration: duration,
+                        // target: entry.value.target,
+                        // completedDates: entry.value.completedDates,
+                        // answersCounts: entry.value.answersCounts,
+                        // answers: entry.value.answers,
+                        // startDate: startDate,
+                        // endDate: endDate,
+                      ),
                     ),
                 SizedBox(width: 8),
               ],

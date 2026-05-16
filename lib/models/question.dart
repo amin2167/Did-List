@@ -81,6 +81,9 @@ class Question extends HiveObject {
   @HiveField(10)
   bool isAllweek; // 매주마다인지
 
+  @HiveField(11)
+  List<int> completedOptions; // 답변 완료한 선지 인덱스
+
   // 기존 코드 호환용 getter/setter
   AnswerType get answerType => AnswerType.values[answerTypeIndex];
   set answerType(AnswerType v) => answerTypeIndex = v.index;
@@ -100,6 +103,7 @@ class Question extends HiveObject {
     required this.datesIdx,
     required this.isAllweek,
     required this.selectedOptions,
+    required this.completedOptions,
     int? answerTypeIdx,
     List<DateTime>? datesListParam,
   })  : answerTypeIndex = answerTypeIdx ?? answerType?.index ?? 0,

@@ -28,6 +28,7 @@ class GoalCard extends StatefulWidget {
 }
 
 class _GoalCard extends State<GoalCard> {
+
   bool isComplete(Question q, DateTime now) {
     for (var date in q.completedDates) {
       if (date.year == now.year &&
@@ -40,19 +41,19 @@ class _GoalCard extends State<GoalCard> {
   }
 
   void saveCounts(Question q) {
-    while(q.answers.length > q.answersCounts.length) { //totalcount가 안이상해지는 로직
+    while (q.answers.length > q.answersCounts.length) {
+      //totalcount가 안이상해지는 로직
       q.answersCounts.add(0);
     }
-    // q.answersCounts = List.filled(q.answers.length, 0);
-
     if (q.selectedOptions.isNotEmpty) {
       for (var k in q.selectedOptions) {
         q.answersCounts[k]++;
       }
     }
   }
-
+  
   Widget build(BuildContext context) {
+
     return Card(
       color: Colors.white,
       elevation: 1,
@@ -64,7 +65,7 @@ class _GoalCard extends State<GoalCard> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -93,12 +94,13 @@ class _GoalCard extends State<GoalCard> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(widget.entry.value.target, softWrap: true),
                 ),
+                // Spacer(),
                 (isComplete(widget.entry.value, widget.now))
                     ? Icon(
                         Icons.task_alt,
                         color: const Color.fromARGB(255, 6, 182, 12),
                       )
-                    : Icon(Icons.task_alt, color: Colors.grey,),
+                    : Icon(Icons.task_alt, color: Colors.grey),
               ],
             ),
             Column(
@@ -106,57 +108,65 @@ class _GoalCard extends State<GoalCard> {
                 //질문 타입이 객관식일경우
                 for (var option in widget.entry.value.answers.asMap().entries)
                   if (!isComplete(widget.entry.value, widget.now))
-                     
-                  //객관식이면 선지 체크박스로 주관식이면 텍스트필드로
-                  if (widget.entry.value.answerType == AnswerType.multipleChoice)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            //체크박스 파란색 대는 부분
-                            color:
-                                widget.entry.value.selectedOptions.contains(
-                                  option.key,
-                                )
-                                ? const Color.fromARGB(255, 2, 134, 241)
-                                : Colors.grey.shade300,
-                            width: 2,
+                    //객관식이면 선지 체크박스로 주관식이면 텍스트필드로
+                    if (widget.entry.value.answerType ==
+                        AnswerType.multipleChoice)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              //체크박스 파란색 대는 부분
+                              color:
+                                  widget.entry.value.selectedOptions.contains(
+                                    option.key,
+                                  )
+                                  ? const Color.fromARGB(255, 2, 134, 241)
+                                  : Colors.grey.shade300,
+                              width: 2,
+                            ),
                           ),
-                        ),
-                        child: CheckboxListTile(
-                          title: Text(option.value),
-                          value: widget.entry.value.selectedOptions.contains(
-                            option.key,
+                          child: CheckboxListTile(
+                            contentPadding: EdgeInsets.symmetric(horizontal: 4),
+                            dense: true,
+                            visualDensity: VisualDensity(
+                              horizontal: 0,
+                              vertical: -4,
+                            ),
+                            checkboxScaleFactor: 0.8,
+                            title: Text(option.value),
+                            value: widget.entry.value.selectedOptions.contains(
+                              option.key,
+                            ),
+                            onChanged: (bool? checked) {
+                              setState(() {
+                                if (checked == true) {
+                                  widget.entry.value.selectedOptions.add(
+                                    option.key,
+                                  );
+                                } else {
+                                  widget.entry.value.selectedOptions.remove(
+                                    option.key,
+                                  );
+                                }
+                                widget.entry.value.save(); // Hive 저장
+                              });
+                            },
+                            controlAffinity:
+                                ListTileControlAffinity.leading, // 체크박스 위치
+                            activeColor: const Color.fromARGB(
+                              255,
+                              83,
+                              151,
+                              210,
+                            ), // 체크됐을 때 색상
                           ),
-                          onChanged: (bool? checked) {
-                            setState(() {
-                              if (checked == true) {
-                                widget.entry.value.selectedOptions.add(
-                                  option.key,
-                                );
-                              } else {
-                                widget.entry.value.selectedOptions.remove(
-                                  option.key,
-                                );
-                              }
-                              widget.entry.value.save(); // Hive 저장
-                            });
-                          },
-                          controlAffinity:
-                              ListTileControlAffinity.leading, // 체크박스 위치
-                          activeColor: const Color.fromARGB(
-                            255,
-                            83,
-                            151,
-                            210,
-                          ), // 체크됐을 때 색상
                         ),
                       ),
-                    ),
+
                 if (widget.entry.value.answerType == AnswerType.subjective)
-                  if(!isComplete(widget.entry.value, widget.now))
+                  if (!isComplete(widget.entry.value, widget.now))
                     MyTextField(
                       controller: widget.subjectController,
                       label: '답변을 입력하세요.',
@@ -164,7 +174,7 @@ class _GoalCard extends State<GoalCard> {
                     ),
               ],
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 6),
             (!isComplete(widget.entry.value, widget.now))
                 ? CompleteButton(
                     label: "완료",
@@ -194,7 +204,9 @@ class _GoalCard extends State<GoalCard> {
                             ),
                           );
                           saveCounts(q);
-                          q.selectedOptions = []; //완료 버튼 누르면 같은질문의 선지는 다시 선택 해제되게끔
+                          q.completedOptions = List.from(q.selectedOptions);
+
+                          q.selectedOptions = [];
                           q.save(); // Hive 저장
                         }
                       });
@@ -205,12 +217,21 @@ class _GoalCard extends State<GoalCard> {
                     label: "취소",
                     completePush: (q) {
                       setState(() {
-                        q.completedDates.remove(widget.now);
-                        if (q.selectedOptions.isNotEmpty) {
-                          for (var option in q.selectedOptions) {
+                        q.completedDates.remove(
+                          DateTime(
+                              widget.now.year,
+                              widget.now.month,
+                              widget.now.day,
+                            )
+                        );
+                        //취소하면 카운트 내리는 로직
+                        if(q.completedOptions.isNotEmpty) {
+                          print('temp is not empty');
+                          for(var option in q.completedOptions) {
                             q.answersCounts[option]--;
                           }
                         }
+                        
                         q.save(); // Hive 저장
                       });
                     },

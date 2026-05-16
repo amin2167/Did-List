@@ -18,7 +18,7 @@ class QuestionPageCard extends StatelessWidget {
     final List<String> weekDayLabels = ['월', '화', '수', '목', '금', '토', '일'];
     // TODO: implement build
     return Card(
-      // 중요: 자식 위젯(InkWell)의 효과가 카드 모서리에 맞춰 잘리도록 설정
+      margin: EdgeInsets.symmetric(vertical: 4),
       clipBehavior: Clip.antiAlias,
       elevation: 1,
 

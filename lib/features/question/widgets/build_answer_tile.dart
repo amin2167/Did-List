@@ -7,8 +7,8 @@ import '../../../providers/question_edit_provider.dart';
 class BuildAnswerTile extends StatefulWidget {
   final QuestionEditProvider provider;
   final List<TextEditingController> optionControllers; // 👈 부모에서 받기
-  final VoidCallback onAddOption;                      // 👈 부모에서 받기
-  final Function(int) onRemoveOption;                  // 👈 부모에서 받기
+  final VoidCallback onAddOption; // 👈 부모에서 받기
+  final Function(int) onRemoveOption; // 👈 부모에서 받기
 
   const BuildAnswerTile({
     super.key,
@@ -32,18 +32,17 @@ class _BuildAnswerTileState extends State<BuildAnswerTile> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Text('선지'),
-        ),
+        Text('선지'),
         for (int i = 0; i < widget.optionControllers.length; i++)
           Row(
             children: [
-              AnswerTextField(
-                label: i == 0 ? '했음' : i == 1 ? '안했음' : '',
-                controller: widget.optionControllers[i],
+              Expanded(
+                child: AnswerTextField(//했음 안했음 input
+                  
+                  controller: widget.optionControllers[i],
+                ),
               ),
-              
+
               SizedBox(width: 8),
               GestureDetector(
                 onTap: () => widget.onRemoveOption(i),
@@ -63,12 +62,12 @@ class _BuildAnswerTileState extends State<BuildAnswerTile> {
               ),
             ],
           ),
-        Padding(
-          padding: const EdgeInsets.only(top: 4),
-          child: TextButton.icon(
-            onPressed: widget.onAddOption,
-            icon: Icon(Icons.add),
-            label: Text('선지 추가'),
+        TextButton.icon(
+          onPressed: widget.onAddOption,
+          icon: Icon(Icons.add),
+          label: Text('선지 추가'),
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.zero, // 이거 추가
           ),
         ),
       ],

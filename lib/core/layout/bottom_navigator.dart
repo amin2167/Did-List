@@ -31,7 +31,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
       extendBody: true,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
           child: _pages[_currentIndex],
         ),
       ),

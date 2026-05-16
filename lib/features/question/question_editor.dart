@@ -28,6 +28,8 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
   List<TextEditingController> optionControllers = List.generate(
     2,
     (_) => TextEditingController(),
+
+
   );
   late DateTime now;
 
@@ -56,6 +58,9 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
     super.initState();
 
     now = DateTime.now();
+
+    optionControllers[0].text = '했음';
+    optionControllers[1].text = '안했음';
 
     final q = widget.nowQuestion;
 
@@ -131,6 +136,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
       selectedOptions: [],
       answersCounts: [],
       isAllweek: isAllweek,
+      completedOptions: [],
     );
 
     providerList.addQuestion(q);
@@ -196,163 +202,171 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
   Widget build(BuildContext context) {
     final provider = context.watch<QuestionEditProvider>();
 
-    return Scaffold(
-      backgroundColor: Color(0xFFEEEEF8),
-      appBar: AppBar(
-        backgroundColor: Color(0xFFEEEEF8),
-        centerTitle: true,
-        title: Text('새 목표 설정')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('날짜'),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: QuestionDrops(
-                        selectedDates: selectedDays,
-                        selectedDayIdx: selectedDayIdx,
-                        weekDayLabels: weekDayLabels,
-                        onChanged: (dayIdx, days) {
-                          setState(() {
-                            selectedDayIdx = dayIdx;
-                            selectedDays = days;
-                            selectedDayIdx.sort();
-                          });
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: Text('목표'),
-                    ),
-
-                    Row(
+    return SafeArea(
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          backgroundColor: Color(0xFFEEEEF8),
+          appBar: AppBar(
+            backgroundColor: Color(0xFFEEEEF8),
+            centerTitle: true,
+            title: Text('새 목표 설정')),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: ShadowBox(
-                            widget: MyTextField(
-                              height: 2,
-                              controller: targetController,
-                              label: "목표를 입력하세요",
-                            ),
+                        Text('날짜'),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: QuestionDrops(
+                            selectedDates: selectedDays,
+                            selectedDayIdx: selectedDayIdx,
+                            weekDayLabels: weekDayLabels,
+                            onChanged: (dayIdx, days) {
+                              setState(() {
+                                selectedDayIdx = dayIdx;
+                                selectedDays = days;
+                                selectedDayIdx.sort();
+                              });
+                            },
                           ),
                         ),
-                      ],
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: Text('답변 방식'),
-                    ),
-
-                    Row(
-                      children: [
-                        BuildTypeButton(
-                          label: '객관식',
-                          isSelected:
-                              provider.answerType == AnswerType.multipleChoice,
-                          onTap: () =>
-                              provider.setAnswerType(AnswerType.multipleChoice),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Text('목표'),
                         ),
-                        const SizedBox(width: 16), // 버튼 사이 간격
-                        BuildTypeButton(
-                          label: '주관식',
-                          isSelected:
-                              provider.answerType == AnswerType.subjective,
-                          onTap: () =>
-                              provider.setAnswerType(AnswerType.subjective),
-                        ),
-                      ],
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: BuildAnswerTile(
-                        provider: provider,
-                        optionControllers: optionControllers,
-                        onAddOption: _addOption,
-                        onRemoveOption: _removeOption,
-                      ),
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: Text('주기'),
-                    ),
-
-                    Row(
-                      children: [
-                        BuildTypeButton(
-                          label: '매주',
-                          isSelected: isAllweek == true,
-                          onTap: () {
-                            setState(() {
-                              isAllweek = true;
-                            });
-                          },
+        
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ShadowBox(
+                                widget: MyTextField(
+                                  height: 2,
+                                  controller: targetController,
+                                  label: "목표를 입력하세요",
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
 
-                        const SizedBox(width: 16), // 버튼 사이 간격
-                        BuildTypeButton(
-                          label: '하루만',
-                          isSelected: isAllweek == false,
-                          onTap: () {
-                            setState(() {
-                              isAllweek = false;
-                            });
 
-                            CalendarDialogEditing.show(
-                              context,
-                              selectedDays: selectedDays,
-                              onDaysUpdated: (days) {
+                        //답변방식 객관식/주관식 선택하는부분
+                        
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(vertical: 8),
+                        //   child: Text('답변 방식'),
+                        // ),
+        
+                        // Row(
+                        //   children: [
+                        //     BuildTypeButton(
+                        //       label: '객관식',
+                        //       isSelected:
+                        //           provider.answerType == AnswerType.multipleChoice,
+                        //       onTap: () =>
+                        //           provider.setAnswerType(AnswerType.multipleChoice),
+                        //     ),
+                        //     const SizedBox(width: 16), // 버튼 사이 간격
+                        //     BuildTypeButton(
+                        //       label: '주관식',
+                        //       isSelected:
+                        //           provider.answerType == AnswerType.subjective,
+                        //       onTap: () =>
+                        //           provider.setAnswerType(AnswerType.subjective),
+                        //     ),
+                        //   ],
+                        // ),
+        
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: BuildAnswerTile(
+                            provider: provider,
+                            optionControllers: optionControllers,
+                            onAddOption: _addOption,
+                            onRemoveOption: _removeOption,
+                          ),
+                        ),
+        
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Text('주기'),
+                        ),
+        
+                        Row(
+                          children: [
+                            BuildTypeButton(
+                              label: '매주',
+                              isSelected: isAllweek == true,
+                              onTap: () {
                                 setState(() {
-                                  selectedDayIdx = days
-                                      .map((date) => date.weekday - 1)
-                                      .toList();
+                                  isAllweek = true;
                                 });
                               },
-                            );
-                          },
+                            ),
+        
+                            const SizedBox(width: 16), // 버튼 사이 간격
+                            BuildTypeButton(
+                              label: '하루만',
+                              isSelected: isAllweek == false,
+                              onTap: () {
+                                setState(() {
+                                  isAllweek = false;
+                                });
+        
+                                CalendarDialogEditing.show(
+                                  context,
+                                  selectedDays: selectedDays,
+                                  onDaysUpdated: (days) {
+                                    setState(() {
+                                      selectedDayIdx = days
+                                          .map((date) => date.weekday - 1)
+                                          .toList();
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+        
+                        SizedBox(height: 12),
+                        Row(
+                          children: [
+                            BuildActionButton(
+                              label: '저장',
+                              onTap: () {
+                                if (widget.nowQuestion == null) {
+                                  for (var i in selectedDayIdx) {
+                                    selectedDays.add(changeDate(i));
+                                  }
+                                  //+버튼이면
+                                  validation();
+                                } else {
+                                  //질문tile이면
+                                  selectedDays = {};
+                                  //selectedDayIdx가 추가되면
+                                  for (var i in selectedDayIdx) {
+                                    selectedDays.add(changeDate(i));
+                                  }
+                                  modify();
+                                }
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),
-
-                    SizedBox(height: 12),
-                    Row(
-                      children: [
-                        BuildActionButton(
-                          label: '저장',
-                          onTap: () {
-                            if (widget.nowQuestion == null) {
-                              for (var i in selectedDayIdx) {
-                                selectedDays.add(changeDate(i));
-                              }
-                              //+버튼이면
-                              validation();
-                            } else {
-                              //질문tile이면
-                              selectedDays = {};
-                              //selectedDayIdx가 추가되면
-                              for (var i in selectedDayIdx) {
-                                selectedDays.add(changeDate(i));
-                              }
-                              modify();
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

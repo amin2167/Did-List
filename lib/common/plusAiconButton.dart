@@ -26,13 +26,13 @@ class PlusAiconButton extends StatelessWidget {
               Color(0xFF8E5CF6), // 보라
             ],
           ),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF8E5CF6),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: const Color(0xFF8E5CF6),
+          //     blurRadius: 8,
+          //     offset: const Offset(0, 4),
+          //   ),
+          // ],
         ),
         child: ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
@@ -41,7 +41,7 @@ class PlusAiconButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            elevation: 2,
+            // elevation: 2,
           ),
           label: Text(style: TextStyle(color: Colors.white), label),
           icon: const Icon(Icons.add, color: Colors.white),

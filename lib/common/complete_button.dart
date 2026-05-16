@@ -18,29 +18,31 @@ class CompleteButton extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
+      height: 40,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         gradient: LinearGradient(
           colors: [
-
             Color(0xFF5B8DEF), // 파랑
             Color(0xFF8E5CF6), // 보라
           ],
         ),
       ),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-        ),
-        onPressed: () {
-          completePush(question);
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(label, style: TextStyle(color: Colors.white)),
-          ],
+      child: SizedBox(
+        height: 40,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            padding: EdgeInsets.zero, // 패딩 완전 제거
+          ),
+          onPressed: () {
+            completePush(question);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [Text(label, style: TextStyle(color: Colors.white))],
+          ),
         ),
       ),
     );

@@ -17,10 +17,10 @@ class MyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return TextField(
-      minLines: height, // 👈 이 한 줄이 핵심
-      maxLines: height,
+      // minLines: height, // 👈 이 한 줄이 핵심
+      // maxLines: height,
       controller: controller,
-      style: TextStyle(fontWeight: FontWeight.bold),
+      // style: TextStyle(fontWeight: FontWeight.bold),
       decoration: InputDecoration(
         labelText: label,
         floatingLabelBehavior: FloatingLabelBehavior.never,
