@@ -64,79 +64,76 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement build
     final provider = context.watch<QuestionListProvider>();
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          Material(
-            color: Color(0xFFF0EEFF),
-            child: Column(
-              children: [
-                Center(
-                  child: Text(
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    "홈",
-                  ),
+    return Column(
+      children: [
+        Material(
+          color: Color(0xFFF0EEFF),
+          child: Column(
+            children: [
+              Center(
+                child: Text(
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  "홈",
                 ),
-                CalendarHeader(
-                  date: now,
-                  onDateChanged: (selectedDate) {
-                    setState(() {
-                      now = selectedDate; // 부모의 상태를 업데이트
-                    });
-                  },
-                ),
-              ],
-            ),
+              ),
+              CalendarHeader(
+                date: now,
+                onDateChanged: (selectedDate) {
+                  setState(() {
+                    now = selectedDate; // 부모의 상태를 업데이트
+                  });
+                },
+              ),
+            ],
           ),
-          SizedBox(height: 6),
-          Expanded(
-            child: provider.savedQuestions.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFEEEEF8), // 연보라 배경
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Icon(
-                            Icons.track_changes, // 동심원 모양
-                            size: 44,
-                            color: Color(0xFF5B4FCF), // 보라색
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "목표가 없습니다.\n 새 목표를 만들어 주세요.",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 15),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : ListView(
+        ),
+        SizedBox(height: 6),
+        Expanded(
+          child: provider.savedQuestions.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      for (var entry in provider.savedQuestions.asMap().entries)
-                        if (entry.value.isAllweek
-                            ? isSameDay(entry.value, now)
-                            : isNotWeekDay(entry.value, now))
-                          GoalCard(
-                            now: now,
-                            entry: entry,
-                            idxAnswers: idxAnswers,
-                            subjectController: subjectController,
-                          ),
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Color(0xFFEEEEF8), // 연보라 배경
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Icon(
+                          Icons.track_changes, // 동심원 모양
+                          size: 44,
+                          color: Color(0xFF5B4FCF), // 보라색
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "목표가 없습니다.\n 새 목표를 만들어 주세요.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
                     ],
                   ),
-          ),
-        ],
-      ),
+                )
+              : ListView(
+                  children: [
+                    for (var entry in provider.savedQuestions.asMap().entries)
+                      if (entry.value.isAllweek
+                          ? isSameDay(entry.value, now)
+                          : isNotWeekDay(entry.value, now))
+                        GoalCard(
+                          now: now,
+                          entry: entry,
+                          idxAnswers: idxAnswers,
+                          subjectController: subjectController,
+                        ),
+                  ],
+                ),
+        ),
+      ],
     );
   }
 }

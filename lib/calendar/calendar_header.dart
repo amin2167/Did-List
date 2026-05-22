@@ -227,19 +227,21 @@ class CalendarHeader extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  CalendarDialog.show(
-                    context,
-                    selectedDay: date,
-                    onDaySelected: (pickedDate) {
-                      onDateChanged(pickedDate);
-                      _controller.animateToDate(pickedDate);
-                    },
-                  );
-                },
-                child: DateSelector(now: date),
+              Flexible(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    CalendarDialog.show(
+                      context,
+                      selectedDay: date,
+                      onDaySelected: (pickedDate) {
+                        onDateChanged(pickedDate);
+                        _controller.animateToDate(pickedDate);
+                      },
+                    );
+                  },
+                  child: DateSelector(now: date),
+                ),
               ),
               PlusAiconButton(page: const AddQuestionPage(), label: '새 목표'),
             ],

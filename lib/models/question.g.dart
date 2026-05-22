@@ -26,7 +26,7 @@ class QuestionAdapter extends TypeAdapter<Question> {
       datesIdx: (fields[9] as List).cast<int>(),
       isAllweek: fields[10] as bool,
       selectedOptions: (fields[6] as List).cast<int>(),
-      completedOptions: (fields[11] as List).cast<int>(),
+      completedOptions: (fields[11] as List<dynamic>?)?.cast<int>() ?? []
     )
       ..answerTypeIndex = fields[2] as int
       ..datesList = (fields[7] as List).cast<DateTime>();

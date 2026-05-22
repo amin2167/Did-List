@@ -12,6 +12,7 @@ class DateSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           DateFormat('yyyy년 MM월 dd일').format(now),

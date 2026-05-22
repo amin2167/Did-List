@@ -55,6 +55,7 @@ class _GoalCard extends State<GoalCard> {
   Widget build(BuildContext context) {
 
     return Card(
+      margin: EdgeInsets.symmetric(vertical: 4),
       color: Colors.white,
       elevation: 1,
       shape: RoundedRectangleBorder(

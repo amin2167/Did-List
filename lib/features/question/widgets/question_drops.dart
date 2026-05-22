@@ -14,38 +14,48 @@ class QuestionDrops extends StatefulWidget {
     required this.onChanged,
   });
 
-  
-  
   @override
   State<QuestionDrops> createState() => _QuestionDropsState();
 }
 
 class _QuestionDropsState extends State<QuestionDrops> {
-  late List<int> _selectedDayIdx; 
+  late List<int> _selectedDayIdx;
   late Set<DateTime> _selectedDates;
 
   @override
   void initState() {
     super.initState();
     _selectedDayIdx = widget.selectedDayIdx.isEmpty
-      ? [0, 1, 2, 3, 4, 5, 6]
-      : List.from(widget.selectedDayIdx);
+        ? [0, 1, 2, 3, 4, 5, 6]
+        : List.from(widget.selectedDayIdx);
 
     _selectedDates = Set.from(widget.selectedDates);
   }
+
+  //요일 drop누르면 하루만 눌럿을때 나오는 달력이 바뀌는 로직
+  @override
+  void didUpdateWidget(QuestionDrops oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedDayIdx != widget.selectedDayIdx) {
+      setState(() {
+        _selectedDayIdx = List.from(widget.selectedDayIdx);
+        _selectedDates = Set.from(widget.selectedDates);
+      });
+    }
+  }
+
   DateTime changeDate(int diff) {
     final now = DateTime.now();
     DateTime monday = now.subtract(Duration(days: now.weekday - 1));
     DateTime resultWeekDay = monday.add(Duration(days: diff));
     return DateTime(resultWeekDay.year, resultWeekDay.month, resultWeekDay.day);
-}
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      
+
       children: List.generate(7, (index) {
         final bool isSelected = _selectedDayIdx.contains(index);
         return GestureDetector(
@@ -75,9 +85,7 @@ class _QuestionDropsState extends State<QuestionDrops> {
                   : null,
               color: isSelected ? null : Colors.white,
               border: Border.all(
-                color: isSelected
-                    ? Colors.transparent
-                    : Colors.grey.shade300,
+                color: isSelected ? Colors.transparent : Colors.grey.shade300,
               ),
             ),
             child: Center(
@@ -85,9 +93,7 @@ class _QuestionDropsState extends State<QuestionDrops> {
                 widget.weekDayLabels[index],
                 style: TextStyle(
                   color: isSelected ? Colors.white : Colors.black87,
-                  fontWeight: isSelected
-                      ? FontWeight.bold
-                      : FontWeight.normal,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
             ),

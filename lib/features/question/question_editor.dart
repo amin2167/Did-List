@@ -324,6 +324,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                                   selectedDays: selectedDays,
                                   onDaysUpdated: (days) {
                                     setState(() {
+                                      selectedDays = days;
                                       selectedDayIdx = days
                                           .map((date) => date.weekday - 1)
                                           .toList();
