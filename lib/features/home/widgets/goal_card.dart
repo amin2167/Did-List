@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_main/features/question/question_page.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +10,7 @@ import '../../../models/question.dart';
 import '../../../providers/question_list_provider.dart';
 import '../../../common/complete_button.dart';
 import '../../../common/my_text_field.dart';
+import '../../question/question_editor.dart';
 
 class GoalCard extends StatefulWidget {
   GoalCard({
@@ -28,7 +30,6 @@ class GoalCard extends StatefulWidget {
 }
 
 class _GoalCard extends State<GoalCard> {
-
   bool isComplete(Question q, DateTime now) {
     for (var date in q.completedDates) {
       if (date.year == now.year &&
@@ -51,9 +52,8 @@ class _GoalCard extends State<GoalCard> {
       }
     }
   }
-  
-  Widget build(BuildContext context) {
 
+  Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 4),
       color: Colors.white,
@@ -102,6 +102,20 @@ class _GoalCard extends State<GoalCard> {
                         color: const Color.fromARGB(255, 6, 182, 12),
                       )
                     : Icon(Icons.task_alt, color: Colors.grey),
+                Spacer(),
+                GestureDetector(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          AddQuestionPage(nowQuestion: widget.entry.value),
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.settings,
+                    color: Colors.grey,
+                  ),
+                ),
               ],
             ),
             Column(
@@ -220,19 +234,19 @@ class _GoalCard extends State<GoalCard> {
                       setState(() {
                         q.completedDates.remove(
                           DateTime(
-                              widget.now.year,
-                              widget.now.month,
-                              widget.now.day,
-                            )
+                            widget.now.year,
+                            widget.now.month,
+                            widget.now.day,
+                          ),
                         );
                         //취소하면 카운트 내리는 로직
-                        if(q.completedOptions.isNotEmpty) {
+                        if (q.completedOptions.isNotEmpty) {
                           print('temp is not empty');
-                          for(var option in q.completedOptions) {
+                          for (var option in q.completedOptions) {
                             q.answersCounts[option]--;
                           }
                         }
-                        
+
                         q.save(); // Hive 저장
                       });
                     },
