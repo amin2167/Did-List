@@ -70,78 +70,80 @@ class QuestionPageCard extends StatelessWidget {
                     children: [
                       Expanded(child: Text(entry.value.target)),
                       // 삭제버튼 아이콘
-                      Container(
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          color: Color(0xFFFFEBEE),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: IconButton(
-                          iconSize: 20,
-                          constraints: const BoxConstraints(),
-                          icon: const Icon(
-                            FontAwesomeIcons.trashCan,
-                            color: Colors.red,
-                            size: 20,
-                          ),
-                          onPressed: () {
-                            // 1. 다이얼로그 띄우기
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext dialogContext) {
-                                return AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  title: const Text("목표 삭제"),
-                                  content: Text(
-                                    "'${entry.value.target}'정말 삭제하시겠습니까?",
-                                  ),
-                                  actions: [
-                                    // 취소 버튼
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(dialogContext),
-                                      child: const Text(
-                                        "취소",
-                                        style: TextStyle(color: Colors.grey),
-                                      ),
-                                    ),
-                                    // 삭제 확정 버튼
-                                    TextButton(
-                                      onPressed: () {
-                                        // 2. 실제 데이터 삭제 실행 (Provider 호출)
-                                        provider.deleteQuestion(entry.value);
-
-                                        // 3. 다이얼로그 닫기
-                                        Navigator.pop(dialogContext);
-
-                                        // 4. 삭제 완료 피드백 (스낵바)
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          const SnackBar(
-                                            content: Text("목표가 삭제되었습니다."),
-                                            duration: Duration(seconds: 2),
-                                          ),
-                                        );
-                                      },
-                                      child: const Text(
-                                        "삭제",
-                                        style: TextStyle(
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ),
+                      // Container(
+                      //   width: 30,
+                      //   height: 30,
+                      //   decoration: BoxDecoration(
+                      //     color: Color(0xFFFFEBEE),
+                      //     borderRadius: BorderRadius.circular(10),
+                      //   ),
+                      //   child: Center(
+                      //     child: IconButton(
+                      //       iconSize: 20,
+                      //       constraints: const BoxConstraints(),
+                      //       icon: const Icon(
+                      //         FontAwesomeIcons.trashCan,
+                      //         color: Colors.red,
+                      //         size: 20,
+                      //       ),
+                      //       onPressed: () {
+                      //         // 1. 다이얼로그 띄우기
+                      //         showDialog(
+                      //           context: context,
+                      //           builder: (BuildContext dialogContext) {
+                      //             return AlertDialog(
+                      //               shape: RoundedRectangleBorder(
+                      //                 borderRadius: BorderRadius.circular(16),
+                      //               ),
+                      //               title: const Text("목표 삭제"),
+                      //               content: Text(
+                      //                 "'${entry.value.target}'정말 삭제하시겠습니까?",
+                      //               ),
+                      //               actions: [
+                      //                 // 취소 버튼
+                      //                 TextButton(
+                      //                   onPressed: () =>
+                      //                       Navigator.pop(dialogContext),
+                      //                   child: const Text(
+                      //                     "취소",
+                      //                     style: TextStyle(color: Colors.grey),
+                      //                   ),
+                      //                 ),
+                      //                 // 삭제 확정 버튼
+                      //                 TextButton(
+                      //                   onPressed: () {
+                      //                     // 2. 실제 데이터 삭제 실행 (Provider 호출)
+                      //                     provider.deleteQuestion(entry.value);
+                          
+                      //                     // 3. 다이얼로그 닫기
+                      //                     Navigator.pop(dialogContext);
+                          
+                      //                     // 4. 삭제 완료 피드백 (스낵바)
+                      //                     ScaffoldMessenger.of(
+                      //                       context,
+                      //                     ).showSnackBar(
+                      //                       const SnackBar(
+                      //                         content: Text("목표가 삭제되었습니다."),
+                      //                         duration: Duration(seconds: 2),
+                      //                       ),
+                      //                     );
+                      //                   },
+                      //                   child: const Text(
+                      //                     "삭제",
+                      //                     style: TextStyle(
+                      //                       color: Colors.red,
+                      //                       fontWeight: FontWeight.bold,
+                      //                     ),
+                      //                   ),
+                      //                 ),
+                      //               ],
+                      //             );
+                      //           },
+                      //         );
+                      //       },
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
 

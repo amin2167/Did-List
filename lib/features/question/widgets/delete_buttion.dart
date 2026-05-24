@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
-class BuildActionButton extends StatelessWidget {
+class DeleteButton extends StatelessWidget {
   final String label;
   final VoidCallback onTap;
-  final Color textColor = Colors.black87;
+  final Color textColor;
   final IconData? icon;
   
-  BuildActionButton({
+  DeleteButton({
     super.key,
     required this.label,
     required this.onTap,
     // Color color = Colors.white, // 기본값 흰색
+    required this.textColor,
     this.icon,
   });
 
@@ -20,12 +21,7 @@ class BuildActionButton extends StatelessWidget {
       duration: const Duration(milliseconds: 200),
       height: 55,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color(0xFF5B8DEF), // 파랑
-            Color(0xFF8E5CF6), // 보라
-          ],
-        ),
+        color: Colors.red,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -43,7 +39,6 @@ class BuildActionButton extends StatelessWidget {
               Icon(icon, color: textColor, size: 20),
               const SizedBox(width: 8),
             ],
-            Icon(Icons.save_outlined, color: Colors.white),
             SizedBox(width: 4),
             Text(
               label,

@@ -13,6 +13,7 @@ import 'widgets/build_type_button.dart';
 import 'widgets/calendar_dialog_editing.dart';
 import 'widgets/question_drops.dart';
 import './widgets/build_answer_tile.dart';
+import './widgets/delete_buttion.dart';
 
 class AddQuestionPage extends StatefulWidget {
   const AddQuestionPage({super.key, this.nowQuestion});
@@ -28,8 +29,6 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
   List<TextEditingController> optionControllers = List.generate(
     2,
     (_) => TextEditingController(),
-
-
   );
   late DateTime now;
 
@@ -200,7 +199,8 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<QuestionEditProvider>();
+    final editProvider = context.watch<QuestionEditProvider>();
+    final listProvider = context.watch<QuestionListProvider>();
 
     return SafeArea(
       child: GestureDetector(
@@ -210,7 +210,8 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
           appBar: AppBar(
             backgroundColor: Color(0xFFEEEEF8),
             centerTitle: true,
-            title: Text('새 목표 설정')),
+            title: Text('새 목표 설정'),
+          ),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -240,7 +241,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: Text('목표'),
                         ),
-        
+
                         Row(
                           children: [
                             Expanded(
@@ -255,14 +256,13 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                           ],
                         ),
 
-
                         //답변방식 객관식/주관식 선택하는부분
-                        
+
                         // Padding(
                         //   padding: const EdgeInsets.symmetric(vertical: 8),
                         //   child: Text('답변 방식'),
                         // ),
-        
+
                         // Row(
                         //   children: [
                         //     BuildTypeButton(
@@ -282,22 +282,21 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                         //     ),
                         //   ],
                         // ),
-        
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: BuildAnswerTile(
-                            provider: provider,
+                            provider: editProvider,
                             optionControllers: optionControllers,
                             onAddOption: _addOption,
                             onRemoveOption: _removeOption,
                           ),
                         ),
-        
+
                         Padding(
                           padding: const EdgeInsets.only(bottom: 12),
                           child: Text('주기'),
                         ),
-        
+
                         Row(
                           children: [
                             BuildTypeButton(
@@ -309,7 +308,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                                 });
                               },
                             ),
-        
+
                             const SizedBox(width: 16), // 버튼 사이 간격
                             BuildTypeButton(
                               label: '하루만',
@@ -318,7 +317,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                                 setState(() {
                                   isAllweek = false;
                                 });
-        
+
                                 CalendarDialogEditing.show(
                                   context,
                                   selectedDays: selectedDays,
@@ -335,7 +334,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                             ),
                           ],
                         ),
-        
+
                         SizedBox(height: 12),
                         Row(
                           children: [
@@ -356,6 +355,78 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                                     selectedDays.add(changeDate(i));
                                   }
                                   modify();
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 4,),
+                        Row(
+                          children: [
+                            DeleteButton(
+                              label: '삭제',
+                              icon: FontAwesomeIcons.trashCan,
+                              textColor: Colors.white,
+                              onTap: () {
+                                if (widget.nowQuestion == null) {
+                                  Navigator.pop(context);
+                                }
+                                if (widget.nowQuestion != null) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext dialogContext) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(16),
+                                        ),
+                                        title: const Text("목표 삭제"),
+                                        content: Text(
+                                          "정말 삭제하시겠습니까?",
+                                        ),
+                                        actions: [
+                                          // 취소 버튼
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(dialogContext),
+                                            child: const Text(
+                                              "취소",
+                                              style: TextStyle(color: Colors.grey),
+                                            ),
+                                          ),
+                                          // 삭제 확정 버튼
+                                          TextButton(
+                                            onPressed: () {
+                                              // 2. 실제 데이터 삭제 실행 (Provider 호출)
+                                              listProvider.deleteQuestion(
+                                                widget.nowQuestion!,
+                                              );
+                            
+                                              // 3. 다이얼로그 닫기
+                                              Navigator.pop(dialogContext);
+                                              Navigator.pop(context);
+                            
+                                              // 4. 삭제 완료 피드백 (스낵바)
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text("삭제되었습니다."),
+                                                  duration: Duration(seconds: 2),
+                                                ),
+                                              );
+                                            },
+                                            child: const Text(
+                                              "삭제",
+                                              style: TextStyle(
+                                                color: Colors.red,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                 }
                               },
                             ),
