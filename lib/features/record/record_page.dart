@@ -109,7 +109,7 @@ class _RecordPageState extends State<RecordPage> {
                                       onDaySelected: (pickedDate) {
                                         setState(() {
                                           startDate = pickedDate;
-                                          print('startDate: ${startDate}');
+                                          duration = endDate.difference(startDate);
                                         });
                                       },
                                     );
@@ -136,6 +136,7 @@ class _RecordPageState extends State<RecordPage> {
                                       onDaySelected: (pickedDate) {
                                         setState(() {
                                           endDate = pickedDate;
+                                          duration = endDate.difference(startDate);
                                         });
                                       },
                                     );

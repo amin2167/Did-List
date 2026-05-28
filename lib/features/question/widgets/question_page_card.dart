@@ -151,15 +151,15 @@ class QuestionPageCard extends StatelessWidget {
                     children: [
                       Transform.translate(
                         offset: Offset(-1, 0),
-                        child: TextBox(
-                          condition:
-                              entry.value.answerType ==
-                              AnswerType.multipleChoice,
-                          label_1: '객관식',
-                          label_2: '주관식',
-                        ),
+                        // child: TextBox(//객관식 주관식 보이는 부분
+                        //   condition:
+                        //       entry.value.answerType ==
+                        //       AnswerType.multipleChoice,
+                        //   label_1: '객관식',
+                        //   label_2: '주관식',
+                        // ),
                       ),
-                      SizedBox(width: 4),
+                      // SizedBox(width: 4),
                       if (entry.value.datesIdx.length == 7)
                         TextBox(label_1: '매일', label_2: '')
                       else
