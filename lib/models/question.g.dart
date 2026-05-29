@@ -26,7 +26,8 @@ class QuestionAdapter extends TypeAdapter<Question> {
       datesIdx: (fields[9] as List).cast<int>(),
       isAllweek: fields[10] as bool,
       selectedOptions: (fields[6] as List).cast<int>(),
-      completedOptions: (fields[11] as List<dynamic>?)?.cast<int>() ?? []
+      completedOptions: (fields[11] as List<dynamic>?)?.cast<int>() ?? [],
+      startDate: (fields[12] as DateTime?) ?? DateTime.now(),
     )
       ..answerTypeIndex = fields[2] as int
       ..datesList = (fields[7] as List).cast<DateTime>();
@@ -35,7 +36,7 @@ class QuestionAdapter extends TypeAdapter<Question> {
   @override
   void write(BinaryWriter writer, Question obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -57,7 +58,11 @@ class QuestionAdapter extends TypeAdapter<Question> {
       ..writeByte(9)
       ..write(obj.datesIdx)
       ..writeByte(10)
-      ..write(obj.isAllweek);
+      ..write(obj.isAllweek)
+      ..writeByte(11)
+      ..write(obj.completedOptions)  // 이것도 빠져있었음
+      ..writeByte(12)
+      ..write(obj.startDate);
   }
 
   @override

@@ -136,6 +136,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
       answersCounts: [],
       isAllweek: isAllweek,
       completedOptions: [],
+      startDate: DateTime.now(),
     );
 
     providerList.addQuestion(q);

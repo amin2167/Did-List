@@ -24,14 +24,17 @@ class RecordPage extends StatefulWidget {
 
 class _RecordPageState extends State<RecordPage> {
   Question? selectedQuestion;
-  DateTime startDate = DateTime.now().subtract(Duration(days: 31));
-  DateTime endDate = DateTime.now().add(Duration(days: 7));
+  // DateTime startDate = DateTime.now().subtract(Duration(days: 31));
+  // DateTime endDate = DateTime.now().add(Duration(days: 7));
+  DateTime? startDate;
+  DateTime? endDate;
   late Duration duration;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    duration = endDate.difference(startDate);
+    //duration = endDate.difference(startDate);
   }
 
   int dateAnswerCounts(Question q, DateTime start, DateTime end) {
@@ -52,6 +55,11 @@ class _RecordPageState extends State<RecordPage> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<QuestionListProvider>();
+
+    // final selectedDuration = (startDate != null && endDate != null)
+    //     ? endDate!.difference(startDate!)
+    //     : null;
+
     return SafeArea(
       child: Column(
         children: [
@@ -105,19 +113,19 @@ class _RecordPageState extends State<RecordPage> {
                                   onTap: () {
                                     CalendarDialog.show(
                                       context,
-                                      selectedDay: startDate,
+                                      selectedDay: startDate ?? DateTime.now(),
                                       onDaySelected: (pickedDate) {
                                         setState(() {
                                           startDate = pickedDate;
-                                          duration = endDate.difference(startDate);
+                                          //duration = endDate.difference(startDate);
                                         });
                                       },
                                     );
                                   },
                                   child: DateRow(
-                                    date: DateFormat(
-                                      'yyyy-MM-dd',
-                                    ).format(startDate),
+                                    date: startDate != null
+                                        ? DateFormat('yyyy-MM-dd').format(startDate!)
+                                        : '시작일 선택',  // 비어있을 때 placeholder
                                     label: '',
                                   ),
                                 );
@@ -132,19 +140,19 @@ class _RecordPageState extends State<RecordPage> {
                                   onTap: () {
                                     CalendarDialog.show(
                                       context,
-                                      selectedDay: endDate,
+                                      selectedDay: endDate ?? DateTime.now(),
                                       onDaySelected: (pickedDate) {
                                         setState(() {
                                           endDate = pickedDate;
-                                          duration = endDate.difference(startDate);
+                                          //duration = endDate.difference(startDate);
                                         });
                                       },
                                     );
                                   },
                                   child: DateRow(
-                                    date: DateFormat(
-                                      'yyyy-MM-dd',
-                                    ).format(endDate),
+                                    date: endDate != null
+                                        ? DateFormat('yyyy-MM-dd').format(endDate!)
+                                        : '종료일 선택',  // 비어있을 때 placeholder
                                     label: '',
                                   ),
                                 );
@@ -174,13 +182,7 @@ class _RecordPageState extends State<RecordPage> {
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       child: RecordMultipleCard(
                         entry: entry,
-                        duration: duration,
-                        // target: entry.value.target,
-                        // completedDates: entry.value.completedDates,
-                        // answersCounts: entry.value.answersCounts,
-                        // answers: entry.value.answers,
-                        // startDate: startDate,
-                        // endDate: endDate,
+                        duration: DateTime.now().difference(entry.value.startDate) + Duration(days: 1),
                       ),
                     ),
                 SizedBox(width: 8),
