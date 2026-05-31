@@ -74,7 +74,7 @@ class _RecordPageState extends State<RecordPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 16),
-          
+
               // 기간 선택 카드
               Container(
                 decoration: BoxDecoration(
@@ -88,7 +88,7 @@ class _RecordPageState extends State<RecordPage> {
                     ),
                   ],
                 ),
-          
+
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
@@ -103,7 +103,7 @@ class _RecordPageState extends State<RecordPage> {
                         ),
                       ),
                       const SizedBox(height: 12),
-          
+
                       Row(
                         children: [
                           Expanded(
@@ -124,12 +124,14 @@ class _RecordPageState extends State<RecordPage> {
                                   },
                                   child: DateRow(
                                     date: startDate != null
-                                        ? DateFormat('yyyy-MM-dd').format(startDate!)
-                                        : '시작일 선택',  // 비어있을 때 placeholder
+                                        ? DateFormat(
+                                            'yyyy-MM-dd',
+                                          ).format(startDate!)
+                                        : '시작일', // 비어있을 때 placeholder
                                     label: '',
                                   ),
                                 );
-                              }
+                              },
                             ),
                           ),
                           Center(child: Text("~  ")),
@@ -151,12 +153,14 @@ class _RecordPageState extends State<RecordPage> {
                                   },
                                   child: DateRow(
                                     date: endDate != null
-                                        ? DateFormat('yyyy-MM-dd').format(endDate!)
-                                        : '종료일 선택',  // 비어있을 때 placeholder
+                                        ? DateFormat(
+                                            'yyyy-MM-dd',
+                                          ).format(endDate!)
+                                        : '종료일', // 비어있을 때 placeholder
                                     label: '',
                                   ),
                                 );
-                              }
+                              },
                             ),
                           ),
                         ],
@@ -173,18 +177,23 @@ class _RecordPageState extends State<RecordPage> {
               // mainAxisSpacing: 6, // 세로 아이템 간 간격 제거
               // crossAxisSpacing: 6, // 가로 아이템 간 간격 제거
               // crossAxisCount: 3,
-      
               padding: EdgeInsets.zero,
               children: [
                 // if (provider.savedQuestions != null)
-                  for (var entry in provider.savedQuestions.asMap().entries)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: RecordMultipleCard(
-                        entry: entry,
-                        duration: DateTime.now().difference(entry.value.startDate) + Duration(days: 1),
-                      ),
+                for (var entry in provider.savedQuestions.asMap().entries)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: RecordMultipleCard(
+                      entry: entry,
+                      duration:
+                          DateTime(
+                            DateTime.now().year,
+                            DateTime.now().month,
+                            DateTime.now().day,
+                          ).difference(entry.value.startDate) +
+                          Duration(days: 1),
                     ),
+                  ),
                 SizedBox(width: 8),
               ],
             ),

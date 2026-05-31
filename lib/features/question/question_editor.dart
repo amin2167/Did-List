@@ -136,7 +136,11 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
       answersCounts: [],
       isAllweek: isAllweek,
       completedOptions: [],
-      startDate: DateTime.now(),
+      startDate: DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+        DateTime.now().day,
+      ),
     );
 
     providerList.addQuestion(q);
@@ -361,7 +365,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 4,),
+                        SizedBox(height: 4),
                         Row(
                           children: [
                             DeleteButton(
@@ -378,12 +382,12 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                                     builder: (BuildContext dialogContext) {
                                       return AlertDialog(
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(16),
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
                                         ),
                                         title: const Text("목표 삭제"),
-                                        content: Text(
-                                          "정말 삭제하시겠습니까?",
-                                        ),
+                                        content: Text("정말 삭제하시겠습니까?"),
                                         actions: [
                                           // 취소 버튼
                                           TextButton(
@@ -391,7 +395,9 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                                                 Navigator.pop(dialogContext),
                                             child: const Text(
                                               "취소",
-                                              style: TextStyle(color: Colors.grey),
+                                              style: TextStyle(
+                                                color: Colors.grey,
+                                              ),
                                             ),
                                           ),
                                           // 삭제 확정 버튼
@@ -401,18 +407,20 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                                               listProvider.deleteQuestion(
                                                 widget.nowQuestion!,
                                               );
-                            
+
                                               // 3. 다이얼로그 닫기
                                               Navigator.pop(dialogContext);
                                               Navigator.pop(context);
-                            
+
                                               // 4. 삭제 완료 피드백 (스낵바)
                                               ScaffoldMessenger.of(
                                                 context,
                                               ).showSnackBar(
                                                 const SnackBar(
                                                   content: Text("삭제되었습니다."),
-                                                  duration: Duration(seconds: 2),
+                                                  duration: Duration(
+                                                    seconds: 2,
+                                                  ),
                                                 ),
                                               );
                                             },
